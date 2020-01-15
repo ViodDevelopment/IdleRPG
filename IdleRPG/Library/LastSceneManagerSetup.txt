@@ -1,5 +1,5 @@
 sceneSetups:
-- path: Assets/Scenes/Button.unity
+- path: Assets/Scenes/Prueba Camara.unity
   isLoaded: 1
   isActive: 1
   isSubScene: 0
