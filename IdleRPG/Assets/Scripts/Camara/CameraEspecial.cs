@@ -26,9 +26,8 @@ public class CameraEspecial : MonoBehaviour
             print(ObjetoGolpeado.transform.position.x);
             ObjetoGolpeado.transform.position = PosicionPrueba;
             //ObjetoGolpeado.attachedRigidbody.MovePosition(PosicionPrueba);
-
         }
-        Debug.DrawLine(ray.origin, hit.point);
+        //Debug.DrawLine(ray.origin, hit.point);
 
     }
 }
