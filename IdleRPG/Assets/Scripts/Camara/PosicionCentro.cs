@@ -19,6 +19,7 @@ public class PosicionCentro : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        StartCoroutine("Corutina2");
         transform.position = Calcular_Punto();
     }
 
@@ -31,5 +32,11 @@ public class PosicionCentro : MonoBehaviour
         Resultado.z = (Champ_01.transform.position.z + Champ_02.transform.position.z + Champ_03.transform.position.z + Champ_04.transform.position.z + Champ_05.transform.position.z)/5;
 
         return Resultado;
+    }
+
+    IEnumerator Corutina2 ()
+    {
+
+        yield return null;
     }
 }
