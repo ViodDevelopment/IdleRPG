@@ -28,9 +28,21 @@ public class CameraCollider_2 : MonoBehaviour
     void OnTriggerEnter(Collider _Collision)
     {
         print("Adios buenas tardes");
-        //Vector3 PosicionPrueba = new Vector3(0f, 0f, 10f);
-        _Collision.gameObject.GetComponent<MeshRenderer>().enabled = true;
+        StartCoroutine(Fade(_Collision));
+       // _Collision.gameObject.GetComponent<MeshRenderer>().enabled = true;
         //_Collision.gameObject.transform.position = PosicionPrueba;
 
+    }
+    private IEnumerator Fade(Collider _Collision)
+    {
+        for (float ft = 0f; ft <= 1.1; ft += 0.1f)
+        {
+            Color color = _Collision.gameObject.GetComponent<Renderer>().material.color;
+            color.a = ft;
+            print(color.a);
+            _Collision.gameObject.GetComponent<Renderer>().material.color = color;
+            
+        }
+        yield return null;
     }
 }
