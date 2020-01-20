@@ -9,7 +9,7 @@ public class Etapas : MonoBehaviour
     public int Etapa;
     public int Fase;
     public int VidaTotal;
-    public int VidaEnemigos;
+ 
     public int Enemigos;
     public Button m_Avance;
     public Button m_AvanzarFase;
@@ -45,8 +45,7 @@ public class Etapas : MonoBehaviour
         {
             Fase++;
             Enemigos = 10;
-            VidaEnemigos = 10 + (5 * Fase);
-
+         
         }
         else if (Enemigos == 0 && Fase == 10)
         {

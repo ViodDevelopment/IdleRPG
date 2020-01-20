@@ -11,12 +11,15 @@ public class CameraCollider_1 : MonoBehaviour
     private float DistanciaColliderX;
     private float DistanciaColliderZ;
     private Vector3 Resultado;
+    public float Speed=0.02f;
+    public float Min=0.2f;
+    private float Max=1;
 
 
     void Start()
     {
         Resultado = new Vector3(0f, 0f , 0f);
-        DistanciaColliderX = 4;
+        DistanciaColliderX = 6;
         DistanciaColliderZ = 7;
     }
 
@@ -38,23 +41,25 @@ public class CameraCollider_1 : MonoBehaviour
         //_Collision.gameObject.transform.position = PosicionPrueba;
 
     }
-    
+    /*
     private IEnumerator Wait()
     {
         print("Que tal le va a usted");
         yield return new WaitForSeconds(2.0f);
-    }
+    }*/
 
     private IEnumerator Fade ( Collider _Collision)
     {
-        for (float ft = 1f; ft>= 0.2; ft -=0.05f)
+        for (float ft = Max; ft>=Min; ft -=Speed)
         {
+            print(ft);
             Color color = _Collision.gameObject.GetComponent<Renderer>().material.color;
             color.a = ft;
             _Collision.gameObject.GetComponent<Renderer>().material.color = color;
-            StartCoroutine(Wait());
+            yield return null;
+            //StartCoroutine(Wait());
         }
-        yield return null;
+     
     }
    
 

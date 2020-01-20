@@ -9,11 +9,14 @@ public class CameraCollider_2 : MonoBehaviour
     private float DistanciaColliderX;
     private float DistanciaColliderZ;
     private Vector3 Resultado;
+    private float Speed = 0.02f;
+    private float Min ;
+    private float Max = 1f;
 
     void Start()
     {
         Resultado = new Vector3(0f, 0f, 0f);
-        DistanciaColliderX = -4;
+        DistanciaColliderX = -6;
         DistanciaColliderZ = 7;
     }
 
@@ -29,20 +32,20 @@ public class CameraCollider_2 : MonoBehaviour
     {
         print("Adios buenas tardes");
         StartCoroutine(Fade(_Collision));
-       // _Collision.gameObject.GetComponent<MeshRenderer>().enabled = true;
-        //_Collision.gameObject.transform.position = PosicionPrueba;
-
+    
     }
     private IEnumerator Fade(Collider _Collision)
     {
-        for (float ft = 0f; ft <= 1.1; ft += 0.1f)
+        Color color = _Collision.gameObject.GetComponent<Renderer>().material.color;
+        Min = color.a;
+        for (float ft = Min; ft <= Max; ft += Speed)
         {
-            Color color = _Collision.gameObject.GetComponent<Renderer>().material.color;
             color.a = ft;
             print(color.a);
             _Collision.gameObject.GetComponent<Renderer>().material.color = color;
             
+            yield return null;
         }
-        yield return null;
+       
     }
 }
