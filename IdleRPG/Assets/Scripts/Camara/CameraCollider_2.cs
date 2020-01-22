@@ -10,7 +10,7 @@ public class CameraCollider_2 : MonoBehaviour
     private float DistanciaColliderZ;
     private Vector3 Resultado;
     private float Speed = 0.02f;
-    private float Min ;
+    private float Min;
     private float Max = 1f;
 
     void Start()
@@ -30,9 +30,9 @@ public class CameraCollider_2 : MonoBehaviour
 
     void OnTriggerEnter(Collider _Collision)
     {
-        print("Adios buenas tardes");
+        //print("Adios buenas tardes");
         StartCoroutine(Fade(_Collision));
-    
+
     }
     private IEnumerator Fade(Collider _Collision)
     {
@@ -43,9 +43,10 @@ public class CameraCollider_2 : MonoBehaviour
             color.a = ft;
             print(color.a);
             _Collision.gameObject.GetComponent<Renderer>().material.color = color;
-            
+
             yield return null;
         }
-       
+
     }
 }
+
