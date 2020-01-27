@@ -11,32 +11,32 @@ public class CameraCollider_1 : MonoBehaviour
     private float DistanciaColliderX;
     private float DistanciaColliderZ;
     private Vector3 Resultado;
-    public float Speed=0.02f;
-    public float Min=0.2f;
-    private float Max=1;
+    public float Speed = 0.02f;
+    public float Min = 0.2f;
+    private float Max = 1f;
 
 
     void Start()
     {
-        Resultado = new Vector3(0f, 0f , 0f);
+        Resultado = new Vector3(0f, 0f, 0f);
         DistanciaColliderX = 6;
         DistanciaColliderZ = 7;
     }
 
     private void Update()
     {
-        Resultado.x= Centro.transform.position.x + DistanciaColliderX;
-        Resultado.z= Centro.transform.position.z - DistanciaColliderZ;
+        Resultado.x = Centro.transform.position.x + DistanciaColliderX;
+        Resultado.z = Centro.transform.position.z - DistanciaColliderZ;
         Resultado.y = transform.position.y;
         transform.position = Resultado;
     }
-     void OnTriggerEnter (Collider _Collision)
+    void OnTriggerEnter(Collider _Collision)
     {
-        print("Hola buenos dias");
+        //print("Hola buenos dias");
         Vector3 PosicionPrueba = new Vector3(0f, 0f, 10f);
-        
+
         StartCoroutine(Fade(_Collision));
-        
+
         //_Collision.gameObject.GetComponent<MeshRenderer>().enabled = false;
         //_Collision.gameObject.transform.position = PosicionPrueba;
 
@@ -48,9 +48,9 @@ public class CameraCollider_1 : MonoBehaviour
         yield return new WaitForSeconds(2.0f);
     }*/
 
-    private IEnumerator Fade ( Collider _Collision)
+    private IEnumerator Fade(Collider _Collision)
     {
-        for (float ft = Max; ft>=Min; ft -=Speed)
+        for (float ft = Max; ft >= Min; ft -= Speed)
         {
             print(ft);
             Color color = _Collision.gameObject.GetComponent<Renderer>().material.color;
@@ -59,8 +59,8 @@ public class CameraCollider_1 : MonoBehaviour
             yield return null;
             //StartCoroutine(Wait());
         }
-     
+
     }
-   
+
 
 }
