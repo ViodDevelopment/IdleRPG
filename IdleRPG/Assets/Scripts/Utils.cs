@@ -9,7 +9,7 @@ public static class Utils
     public static List<GameObject> CheckGOInRangeByTag(GameObject thisGo, string tag, float range)
     {
         GameObject[] gameObjects = GameObject.FindGameObjectsWithTag(tag);
-        List<GameObject> goInRange = null;
+        List<GameObject> goInRange = new List<GameObject>();
 
         foreach (GameObject go in gameObjects)
         {
@@ -40,4 +40,6 @@ public static class Utils
 
         return target;
     }
+
+   
 }
