@@ -1,20 +1,33 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.IO;
+
+[RequireComponent(typeof(MeshFilter))]
+[RequireComponent(typeof(MeshRenderer))]
+[RequireComponent(typeof(MatrixOfProcedural))]
 
 public class GeometryProcedural : MonoBehaviour
 {
     [HideInInspector]
     private static int sizeX = 0, sizeZ = 0;
     private static int density = 0;
-    private Mesh myMesh;
+    private static int precisionProcedural = 0;
+    private static string nameMesh;
+    public Mesh myMesh;
     private Vector3[] vertices;
     private int[] triangles;
-    public void PassAllNums(int _xSize, int _zSize, int _density)
+
+
+    public void PassAllNums(int _xSize, int _zSize, int _density, int _precision, string _name)
     {
         sizeX = _xSize;
         sizeZ = _zSize;
         density = _density;
+        precisionProcedural = _precision;
+        nameMesh = _name;
     }
 
     public void CreateAllVertexs()//Crea los vertices de la mesh dependiendo de los parametros dados
@@ -44,7 +57,7 @@ public class GeometryProcedural : MonoBehaviour
         CreateAllTriangles();
     }
 
-    private void CreateAllTriangles()
+    private void CreateAllTriangles()//crea los triangulos de la mesh
     {
         triangles = new int[sizeX * sizeZ * 6];
 
@@ -61,12 +74,79 @@ public class GeometryProcedural : MonoBehaviour
                 triangles[tris + 5] = l_indexZ + sizeX + 2;
             }
         }
-        print("cantidad de vertices: " + vertices.Length + " cantidad de tris: " + triangles.Length);
+        print("cantidad de vertices: " + vertices.Length + " cantidad de tris: " + triangles.Length / 6);
         myMesh.triangles = triangles;
         myMesh.RecalculateNormals();
-        myMesh.name = "My Mesh";
+        myMesh.name = nameMesh;
 
         GetComponent<MeshFilter>().mesh = myMesh;
 
+        CreateMatrixProcedural();
+    }
+
+    private void CreateMatrixProcedural()
+    {
+        int totalSizeX = sizeX * precisionProcedural;
+        int totalSizeZ = sizeZ * precisionProcedural;
+
+        MatrixOfProcedural matrixProcedural = gameObject.GetComponent<MatrixOfProcedural>();
+
+        matrixProcedural.matrixVertexProcedural.Clear();
+
+        float x = gameObject.transform.position.x, z = gameObject.transform.position.z;
+        for (int numX = 0; numX <= totalSizeX; numX++)
+        {
+            matrixProcedural.matrixVertexProcedural.Add(new List<VertexProcedural>());
+            for (int numZ = 0; numZ <= totalSizeZ; numZ++)
+            {
+                matrixProcedural.matrixVertexProcedural[numX].Add(new VertexProcedural());
+                matrixProcedural.matrixVertexProcedural[numX][numZ].positionsInFloats[0] = x;
+                matrixProcedural.matrixVertexProcedural[numX][numZ].positionsInFloats[1] = 0;
+                matrixProcedural.matrixVertexProcedural[numX][numZ].positionsInFloats[2] = z;
+
+                matrixProcedural.matrixVertexProcedural[numX][numZ].posXMatrix = numX;
+                matrixProcedural.matrixVertexProcedural[numX][numZ].posZMatrix = numZ;
+                matrixProcedural.matrixVertexProcedural[numX][numZ].typeOfVertex = 0;
+                matrixProcedural.matrixVertexProcedural[numX][numZ].transitable = false;
+                z += 1f / precisionProcedural;
+            }
+            z = gameObject.transform.position.z;
+            x += 1f / precisionProcedural;
+        }
+         
+        CreateBinaryFromMatrix();
+    }
+
+    private void CreateBinaryFromMatrix()//hace una matriz imaginaria con x precisión y la guarda en binario
+    {
+        BinaryFormatter bf = new BinaryFormatter();
+        FileStream file = File.Create(Application.streamingAssetsPath + "/" + nameMesh + ".dat");
+
+        MatrixToSave datos = new MatrixToSave();
+        datos.SetMatrixOfVertexProcedural(gameObject.GetComponent<MatrixOfProcedural>().matrixVertexProcedural);
+
+        bf.Serialize(file, datos);
+
+        file.Close();
+
     }
 }
+
+[Serializable]
+public class MatrixToSave
+{
+    private List<List<VertexProcedural>> matrixProcedural = new List<List<VertexProcedural>>();
+
+    public List<List<VertexProcedural>> GetMatrixOfVertexProcedural()
+    {
+        return matrixProcedural;
+    }
+
+    public void SetMatrixOfVertexProcedural(List<List<VertexProcedural>> _matrix)
+    {
+        matrixProcedural.Clear();
+        matrixProcedural = _matrix;
+    }
+}
+
+
