@@ -50,7 +50,7 @@ public class GeometryProcedural : MonoBehaviour
         {
             for (int l_x = 0; l_x <= sizeX; l_x++, num++)
             {
-                vertices[num] = new Vector3((float)l_x / density, 0, (float)l_z / density);
+                vertices[num] = new Vector3((float)l_x / density, 0, (float)l_z / density) + gameObject.transform.position;
             }
         }
         myMesh.vertices = vertices;
@@ -100,9 +100,9 @@ public class GeometryProcedural : MonoBehaviour
             for (int numZ = 0; numZ <= totalSizeZ; numZ++)
             {
                 matrixProcedural.matrixVertexProcedural[numX].Add(new VertexProcedural());
-                matrixProcedural.matrixVertexProcedural[numX][numZ].positionsInFloats[0] = x;
-                matrixProcedural.matrixVertexProcedural[numX][numZ].positionsInFloats[1] = 0;
-                matrixProcedural.matrixVertexProcedural[numX][numZ].positionsInFloats[2] = z;
+                matrixProcedural.matrixVertexProcedural[numX][numZ].positionsInFloats[0] = x + gameObject.transform.position.x;
+                matrixProcedural.matrixVertexProcedural[numX][numZ].positionsInFloats[1] = 0 + gameObject.transform.position.y;
+                matrixProcedural.matrixVertexProcedural[numX][numZ].positionsInFloats[2] = z + gameObject.transform.position.z;
 
                 matrixProcedural.matrixVertexProcedural[numX][numZ].posXMatrix = numX;
                 matrixProcedural.matrixVertexProcedural[numX][numZ].posZMatrix = numZ;
@@ -124,7 +124,7 @@ public class GeometryProcedural : MonoBehaviour
 
         MatrixToSave datos = new MatrixToSave();
         datos.SetMatrixOfVertexProcedural(gameObject.GetComponent<MatrixOfProcedural>().matrixVertexProcedural);
-
+        datos.precision = precisionProcedural;
         bf.Serialize(file, datos);
 
         file.Close();
@@ -136,6 +136,7 @@ public class GeometryProcedural : MonoBehaviour
 public class MatrixToSave
 {
     private List<List<VertexProcedural>> matrixProcedural = new List<List<VertexProcedural>>();
+    public int precision;
 
     public List<List<VertexProcedural>> GetMatrixOfVertexProcedural()
     {
