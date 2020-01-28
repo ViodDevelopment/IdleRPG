@@ -7,7 +7,10 @@ public class GameManager : MonoBehaviour
     public GameObject ally, enemy, instance;
 
     public AllyController[] allies;
-    public List<GameObject> enemies;
+    public EnemyController[] enemies;
+
+
+    public List<Vector3> enemiesSpawnPos;
 
 
     // Start is called before the first frame update
@@ -18,14 +21,11 @@ public class GameManager : MonoBehaviour
         {
             instance = Instantiate(ally);
             instance.transform.position = Vector3.right * i * 1.2f;
-            
-
-            instance = Instantiate(enemy);
-            instance.transform.position = Vector3.one * i * 1.2f;
-            enemies.Add(instance);
         }
 
         allies = FindObjectsOfType<AllyController>();
+
+        SpawnEnemies(enemiesSpawnPos.Count, Vector3.forward * 100, enemiesSpawnPos);
     }
 
     // Update is called once per frame
@@ -35,5 +35,28 @@ public class GameManager : MonoBehaviour
         {
             al.UpdateAlly();
         }
+
+        foreach(EnemyController en in enemies)
+        {
+            en.UpdateEnemy();
+        }
     }
+
+    void SpawnEnemies(int _n, Vector3 _initPos, List<Vector3> _relPositions)
+    {
+
+        for(int i = 0; i < _n; i++)
+        {
+            instance = Instantiate(enemy);
+            instance.transform.position = _initPos + _relPositions[i];
+        }
+
+        enemies = FindObjectsOfType<EnemyController>();
+    }
+
+    //private void OnDrawGizmos()
+    //{
+    //    foreach(Vector3 pos in enemiesSpawnPos)
+    //        Gizmos.DrawCube(pos, Vector3.one);
+    //}
 }

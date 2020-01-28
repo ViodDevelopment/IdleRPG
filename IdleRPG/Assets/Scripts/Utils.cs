@@ -30,6 +30,7 @@ public static class Utils
 
         foreach (GameObject go in list)
         {
+            if (go == null) break;
             distance = Vector3.Distance(go.transform.position, thisGo.transform.position);
             if (distance < closestDistance)
             {

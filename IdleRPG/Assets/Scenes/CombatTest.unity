@@ -168,6 +168,12 @@ MonoBehaviour:
   instance: {fileID: 0}
   allies: []
   enemies: []
+  enemiesSpawnPos:
+  - {x: 3.04, y: 0, z: 2.04}
+  - {x: 1.85, y: 0, z: 0}
+  - {x: 2.92, y: 0, z: -1.93}
+  - {x: 4.42, y: 0, z: 0}
+  - {x: -0.49, y: 0, z: 0}
 --- !u!1 &1909697407
 GameObject:
   m_ObjectHideFlags: 0

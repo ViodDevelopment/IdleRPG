@@ -105,11 +105,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 200
-  alive: 1
+  energy: 0
+  basicAttackDmg: 10
   hitsTaken: 0
   hitsDealt: 0
   range: 50
   enemiesInRange: []
   target: {fileID: 0}
-  basicAttackDmg: 0
+  targetScript: {fileID: 0}
+  basicAttackCooldown: 2
   isAttacking: 0

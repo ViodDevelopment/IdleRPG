@@ -9,16 +9,19 @@ public class AllyController : MonoBehaviour
     States currentState = 0;
 
     #region Combat
-    public int health;
-    public bool alive = true;
+    public int health, energy, basicAttackDmg;
 
     public int hitsTaken = 0, hitsDealt = 0;
 
     public float range;
+
     public List<GameObject> enemiesInRange = null;
+
     public GameObject target = null;
 
-    public float basicAttackDmg;
+    public EnemyController targetScript = null;
+
+    public float basicAttackCooldown;
 
     public bool isAttacking = false;
 
@@ -29,7 +32,6 @@ public class AllyController : MonoBehaviour
 
         if (health <= 0)
         {
-            alive = false;
             currentState = States.DEAD;
         }
     }
@@ -40,24 +42,36 @@ public class AllyController : MonoBehaviour
 
     public void UpdateAlly()
     {
-        enemiesInRange = Utils.CheckGOInRangeByTag(gameObject, "Enemy", range);
-        if (target == null && enemiesInRange != null)
+        if (enemiesInRange.Count == 0)
+        {
+            enemiesInRange = Utils.CheckGOInRangeByTag(gameObject, "Enemy", range);
+        }
+        else if (target == null || target.activeSelf == false)
         {
             CancelInvoke();
+            isAttacking = false;
+            enemiesInRange = Utils.CheckGOInRangeByTag(gameObject, "Enemy", range);
             target = Utils.GetClosestGOInList(gameObject, enemiesInRange);
+            try { targetScript = target.GetComponent<EnemyController>(); } catch { Debug.Log("Couldn't get enemy controller from = " + target); }
+
         }
         else if (target && !isAttacking)
         {
             isAttacking = true;
-            InvokeRepeating("BasicAttack", 0.5f, 0.5f);
+            InvokeRepeating("BasicAttack", 0, basicAttackCooldown);
         }
 
     }
 
     public void BasicAttack()
     {
-        if (target == null) return;
+        if (target == null)
+        {
+            CancelInvoke();
+            return;
+        }
         Debug.Log("Attacking :" + target);
+        targetScript.RecieveDmg(basicAttackDmg);
 
 
     }
