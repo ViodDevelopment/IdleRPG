@@ -30,6 +30,12 @@ public class GeometryProceduralEditor : Editor
             l_geometryP.CreateAllVertexs();
         }
 
+        if (GUILayout.Button("Save Procedural"))
+        {
+            l_geometryP.GetComponent<MatrixOfProcedural>().SaveMatrix();
+            activo = false;
+        }
+
 
     }
 
@@ -45,7 +51,7 @@ public class GeometryProceduralEditor : Editor
         if(activo)
             EditorApplication.ExitPlaymode();
 
-        if (e.type == EventType.MouseDown && activo)
+        if ((e.type == EventType.MouseDrag || e.type == EventType.MouseDown) && activo)
         {
             GameObject _go = HandleUtility.PickGameObject(e.mousePosition, true);
             if (_go != null)
