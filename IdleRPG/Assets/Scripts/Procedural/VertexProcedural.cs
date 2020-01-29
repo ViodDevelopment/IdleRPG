@@ -10,6 +10,12 @@ public class VertexProcedural
     //public Vector3 position; //Si se hace en GO en escena
     public int posXMatrix;
     public int posZMatrix;
-    public int typeOfVertex; //En un futuro hacerlo con diccionario
-    public bool transitable;
+    public enum typeOfVertex {NONE ,PATH, ENVIRONMENT };
+    public typeOfVertex currentTypeVertex = typeOfVertex.NONE;
+
+
+    public void ResetPoint()
+    {
+        currentTypeVertex = typeOfVertex.NONE;
+    }
 }

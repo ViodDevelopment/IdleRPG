@@ -47,7 +47,7 @@ public class MatrixOfProcedural : MonoBehaviour
         file.Close();
     }
 
-    public void HitPointOfMatrix(Vector3 _vector, float _radiusPath, float _radiusEnviroment)//hacer en el otro scipt lo de crear un collider para el terreno
+    public void HitPointOfMatrix(Vector3 _vector, float _radiusPath, float _radiusEnvironment)//hacer en el otro scipt lo de crear un collider para el terreno
     {
         Vector3 l_localPos = transform.InverseTransformPoint(_vector);
         int l_x;
@@ -55,9 +55,9 @@ public class MatrixOfProcedural : MonoBehaviour
         l_localPos *= precisionOfMatrix;
         l_x = Mathf.RoundToInt(l_localPos.x);
         l_z = Mathf.RoundToInt(l_localPos.z);
-        matrixVertexProcedural[l_x][l_z].transitable = true;
+        matrixVertexProcedural[l_x][l_z].currentTypeVertex = VertexProcedural.typeOfVertex.PATH;
 
-        float l_incrementAngles =  5f / (_radiusPath + _radiusEnviroment);
+        float l_incrementAngles = 5f / (_radiusPath + _radiusEnvironment);
         float currentAngles = 0;
         List<Vector2Int> l_positions = new List<Vector2Int>();
         int l_xPos = 0;
@@ -77,7 +77,7 @@ public class MatrixOfProcedural : MonoBehaviour
             for (int i = item.x; i != l_x; i += multiplierX)
             {
                 if (i < matrixVertexProcedural.Count && item.y < matrixVertexProcedural[0].Count && i >= 0 && item.y >= 0)
-                    matrixVertexProcedural[i][item.y].transitable = true;
+                    matrixVertexProcedural[i][item.y].currentTypeVertex = VertexProcedural.typeOfVertex.PATH;
             }
 
             if (item.x == l_x)
@@ -88,7 +88,7 @@ public class MatrixOfProcedural : MonoBehaviour
                 for (int i = item.y; i != l_z; i += multiplierZ)
                 {
                     if (item.x < matrixVertexProcedural.Count && i < matrixVertexProcedural[0].Count && item.x >= 0 && i >= 0)
-                        matrixVertexProcedural[item.x][i].transitable = true;
+                        matrixVertexProcedural[item.x][i].currentTypeVertex = VertexProcedural.typeOfVertex.PATH;
                 }
             }
 
@@ -98,8 +98,8 @@ public class MatrixOfProcedural : MonoBehaviour
         currentAngles = 0;
         for (int i = 0; currentAngles < 360; currentAngles += l_incrementAngles)
         {
-            l_xPos = Mathf.RoundToInt(Mathf.Cos(currentAngles) * (_radiusEnviroment + _radiusPath)) + l_x;
-            l_zPos = Mathf.RoundToInt(Mathf.Sin(currentAngles) * (_radiusEnviroment + _radiusPath)) + l_z;
+            l_xPos = Mathf.RoundToInt(Mathf.Cos(currentAngles) * (_radiusEnvironment + _radiusPath)) + l_x;
+            l_zPos = Mathf.RoundToInt(Mathf.Sin(currentAngles) * (_radiusEnvironment + _radiusPath)) + l_z;
             l_positions.Add(new Vector2Int(l_xPos, l_zPos));
         }
 
@@ -112,11 +112,11 @@ public class MatrixOfProcedural : MonoBehaviour
             {
                 if (i < matrixVertexProcedural.Count && item.y < matrixVertexProcedural[0].Count && i >= 0 && item.y >= 0)
                 {
-                    if (matrixVertexProcedural[i][item.y].transitable == true)
+                    if (matrixVertexProcedural[i][item.y].currentTypeVertex == VertexProcedural.typeOfVertex.PATH)
                         break;
-                    else if(matrixVertexProcedural[i][item.y].typeOfVertex != 5)
+                    else if (matrixVertexProcedural[i][item.y].currentTypeVertex != VertexProcedural.typeOfVertex.ENVIRONMENT)
                     {
-                        matrixVertexProcedural[i][item.y].typeOfVertex = 5;
+                        matrixVertexProcedural[i][item.y].currentTypeVertex = VertexProcedural.typeOfVertex.ENVIRONMENT;
                     }
                 }
             }
@@ -130,10 +130,10 @@ public class MatrixOfProcedural : MonoBehaviour
                 {
                     if (item.x < matrixVertexProcedural.Count && i < matrixVertexProcedural[0].Count && item.x >= 0 && i >= 0)
                     {
-                        if (matrixVertexProcedural[item.x][i].transitable == true)
+                        if (matrixVertexProcedural[item.x][i].currentTypeVertex == VertexProcedural.typeOfVertex.PATH)
                             break;
-                        else if(matrixVertexProcedural[item.x][i].typeOfVertex != 5)
-                            matrixVertexProcedural[item.x][i].typeOfVertex = 5;
+                        else if (matrixVertexProcedural[item.x][i].currentTypeVertex != VertexProcedural.typeOfVertex.ENVIRONMENT)
+                            matrixVertexProcedural[item.x][i].currentTypeVertex = VertexProcedural.typeOfVertex.ENVIRONMENT;
                     }
                 }
             }
@@ -151,7 +151,7 @@ public class MatrixOfProcedural : MonoBehaviour
         l_localPos *= precisionOfMatrix;
         l_x = Mathf.RoundToInt(l_localPos.x);
         l_z = Mathf.RoundToInt(l_localPos.z);
-        matrixVertexProcedural[l_x][l_z].transitable = false;
+        matrixVertexProcedural[l_x][l_z].ResetPoint();
 
         float l_incrementAngles = 5f / (_radiusPath);
         float currentAngles = 0;
@@ -174,8 +174,7 @@ public class MatrixOfProcedural : MonoBehaviour
             {
                 if (i < matrixVertexProcedural.Count && item.y < matrixVertexProcedural[0].Count && i >= 0 && item.y >= 0)
                 {
-                    matrixVertexProcedural[i][item.y].transitable = false;
-                    matrixVertexProcedural[i][item.y].typeOfVertex = 0;
+                    matrixVertexProcedural[i][item.y].ResetPoint();
                 }
             }
 
@@ -188,12 +187,190 @@ public class MatrixOfProcedural : MonoBehaviour
                 {
                     if (item.x < matrixVertexProcedural.Count && i < matrixVertexProcedural[0].Count && item.x >= 0 && i >= 0)
                     {
-                        matrixVertexProcedural[item.x][i].transitable = false;
-                        matrixVertexProcedural[item.x][i].typeOfVertex = 0;
+                        matrixVertexProcedural[item.x][i].ResetPoint();
                     }
                 }
             }
 
+        }
+    }
+
+
+    public void EnvironmentMode(Vector3 _vector, float _radiusEnvironment)
+    {
+        Vector3 l_localPos = transform.InverseTransformPoint(_vector);
+        int l_x;
+        int l_z;
+        l_localPos *= precisionOfMatrix;
+        l_x = Mathf.RoundToInt(l_localPos.x);
+        l_z = Mathf.RoundToInt(l_localPos.z);
+        if (matrixVertexProcedural[l_x][l_z].currentTypeVertex != VertexProcedural.typeOfVertex.PATH)
+        {
+            matrixVertexProcedural[l_x][l_z].currentTypeVertex = VertexProcedural.typeOfVertex.ENVIRONMENT;
+        }
+
+        float l_incrementAngles = 5f / (_radiusEnvironment);
+        float currentAngles = 0;
+        List<Vector2Int> l_positions = new List<Vector2Int>();
+        int l_xPos = 0;
+        int l_zPos = 0;
+        for (int i = 0; currentAngles < 360; currentAngles += l_incrementAngles)
+        {
+            l_xPos = Mathf.RoundToInt(Mathf.Cos(currentAngles) * _radiusEnvironment) + l_x;
+            l_zPos = Mathf.RoundToInt(Mathf.Sin(currentAngles) * _radiusEnvironment) + l_z;
+            l_positions.Add(new Vector2Int(l_xPos, l_zPos));
+        }
+
+        foreach (var item in l_positions)
+        {
+            int multiplierX = 1;
+            if (item.x - l_x > 0)
+                multiplierX = -1;
+            for (int i = item.x; i != l_x; i += multiplierX)
+            {
+                if (i < matrixVertexProcedural.Count && item.y < matrixVertexProcedural[0].Count && i >= 0 && item.y >= 0)
+                {
+                    if (matrixVertexProcedural[i][item.y].currentTypeVertex != VertexProcedural.typeOfVertex.PATH)
+                        matrixVertexProcedural[i][item.y].currentTypeVertex = VertexProcedural.typeOfVertex.ENVIRONMENT;
+                }
+            }
+
+            if (item.x == l_x)
+            {
+                int multiplierZ = 1;
+                if (item.y - l_z > 0)
+                    multiplierZ = -1;
+                for (int i = item.y; i != l_z; i += multiplierZ)
+                {
+                    if (item.x < matrixVertexProcedural.Count && i < matrixVertexProcedural[0].Count && item.x >= 0 && i >= 0)
+                    {
+                        if (matrixVertexProcedural[item.x][i].currentTypeVertex != VertexProcedural.typeOfVertex.PATH)
+                            matrixVertexProcedural[item.x][i].currentTypeVertex = VertexProcedural.typeOfVertex.ENVIRONMENT;
+                    }
+                }
+            }
+
+        }
+    }
+
+    public void CleanPath(Vector3 _vector, float _radiusPath)
+    {
+        Vector3 l_localPos = transform.InverseTransformPoint(_vector);
+        int l_x;
+        int l_z;
+        l_localPos *= precisionOfMatrix;
+        l_x = Mathf.RoundToInt(l_localPos.x);
+        l_z = Mathf.RoundToInt(l_localPos.z);
+        if (matrixVertexProcedural[l_x][l_z].currentTypeVertex == VertexProcedural.typeOfVertex.PATH)
+            matrixVertexProcedural[l_x][l_z].ResetPoint();
+
+        float l_incrementAngles = 5f / (_radiusPath);
+        float currentAngles = 0;
+        List<Vector2Int> l_positions = new List<Vector2Int>();
+        int l_xPos = 0;
+        int l_zPos = 0;
+        for (int i = 0; currentAngles < 360; currentAngles += l_incrementAngles)
+        {
+            l_xPos = Mathf.RoundToInt(Mathf.Cos(currentAngles) * _radiusPath) + l_x;
+            l_zPos = Mathf.RoundToInt(Mathf.Sin(currentAngles) * _radiusPath) + l_z;
+            l_positions.Add(new Vector2Int(l_xPos, l_zPos));
+        }
+
+        foreach (var item in l_positions)
+        {
+            int multiplierX = 1;
+            if (item.x - l_x > 0)
+                multiplierX = -1;
+            for (int i = item.x; i != l_x; i += multiplierX)
+            {
+                if (i < matrixVertexProcedural.Count && item.y < matrixVertexProcedural[0].Count && i >= 0 && item.y >= 0)
+                {
+                    if (matrixVertexProcedural[i][item.y].currentTypeVertex == VertexProcedural.typeOfVertex.PATH)
+                        matrixVertexProcedural[i][item.y].ResetPoint();
+                }
+            }
+
+            if (item.x == l_x)
+            {
+                int multiplierZ = 1;
+                if (item.y - l_z > 0)
+                    multiplierZ = -1;
+                for (int i = item.y; i != l_z; i += multiplierZ)
+                {
+                    if (item.x < matrixVertexProcedural.Count && i < matrixVertexProcedural[0].Count && item.x >= 0 && i >= 0)
+                    {
+                        if (matrixVertexProcedural[item.x][i].currentTypeVertex == VertexProcedural.typeOfVertex.PATH)
+                            matrixVertexProcedural[item.x][i].ResetPoint();
+                    }
+                }
+            }
+
+        }
+    }
+
+    public void CleanEnvironment(Vector3 _vector, float _radiusEnviromnet)
+    {
+        Vector3 l_localPos = transform.InverseTransformPoint(_vector);
+        int l_x;
+        int l_z;
+        l_localPos *= precisionOfMatrix;
+        l_x = Mathf.RoundToInt(l_localPos.x);
+        l_z = Mathf.RoundToInt(l_localPos.z);
+        if (matrixVertexProcedural[l_x][l_z].currentTypeVertex == VertexProcedural.typeOfVertex.ENVIRONMENT)
+            matrixVertexProcedural[l_x][l_z].ResetPoint();
+
+        float l_incrementAngles = 5f / (_radiusEnviromnet);
+        float currentAngles = 0;
+        List<Vector2Int> l_positions = new List<Vector2Int>();
+        int l_xPos = 0;
+        int l_zPos = 0;
+        for (int i = 0; currentAngles < 360; currentAngles += l_incrementAngles)
+        {
+            l_xPos = Mathf.RoundToInt(Mathf.Cos(currentAngles) * _radiusEnviromnet) + l_x;
+            l_zPos = Mathf.RoundToInt(Mathf.Sin(currentAngles) * _radiusEnviromnet) + l_z;
+            l_positions.Add(new Vector2Int(l_xPos, l_zPos));
+        }
+
+        foreach (var item in l_positions)
+        {
+            int multiplierX = 1;
+            if (item.x - l_x > 0)
+                multiplierX = -1;
+            for (int i = item.x; i != l_x; i += multiplierX)
+            {
+                if (i < matrixVertexProcedural.Count && item.y < matrixVertexProcedural[0].Count && i >= 0 && item.y >= 0)
+                {
+                    if (matrixVertexProcedural[i][item.y].currentTypeVertex == VertexProcedural.typeOfVertex.ENVIRONMENT)
+                        matrixVertexProcedural[i][item.y].ResetPoint();
+                }
+            }
+
+            if (item.x == l_x)
+            {
+                int multiplierZ = 1;
+                if (item.y - l_z > 0)
+                    multiplierZ = -1;
+                for (int i = item.y; i != l_z; i += multiplierZ)
+                {
+                    if (item.x < matrixVertexProcedural.Count && i < matrixVertexProcedural[0].Count && item.x >= 0 && i >= 0)
+                    {
+                        if (matrixVertexProcedural[item.x][i].currentTypeVertex == VertexProcedural.typeOfVertex.ENVIRONMENT)
+                            matrixVertexProcedural[item.x][i].ResetPoint();
+                    }
+                }
+            }
+
+        }
+    }
+
+    public void CleanAll()
+    {
+        for (int i = 0; i < matrixVertexProcedural.Count; i++)
+        {
+            for (int j = 0; j < matrixVertexProcedural[i].Count; j++)
+            {
+                matrixVertexProcedural[i][j].ResetPoint();
+            }
         }
     }
 
@@ -209,20 +386,18 @@ public class MatrixOfProcedural : MonoBehaviour
         {
             for (int j = 0; j < matrixVertexProcedural[i].Count; j++)
             {
-                if (!matrixVertexProcedural[i][j].transitable)
+
+                if (matrixVertexProcedural[i][j].currentTypeVertex == VertexProcedural.typeOfVertex.ENVIRONMENT)//por poner numero adecuado
                 {
-                    if (matrixVertexProcedural[i][j].typeOfVertex == 5)//por poner numero adecuado
-                    {
-                        Gizmos.color = Color.cyan;
-                        Gizmos.DrawCube(new Vector3(matrixVertexProcedural[i][j].positionsInFloats[0], matrixVertexProcedural[i][j].positionsInFloats[1], matrixVertexProcedural[i][j].positionsInFloats[2]), Vector3.one / 5);
-                    }
-                    else
-                    {
-                        Gizmos.color = Color.red;
-                        Gizmos.DrawCube(new Vector3(matrixVertexProcedural[i][j].positionsInFloats[0], matrixVertexProcedural[i][j].positionsInFloats[1], matrixVertexProcedural[i][j].positionsInFloats[2]), Vector3.one / 5);
-                    }
+                    Gizmos.color = Color.cyan;
+                    Gizmos.DrawCube(new Vector3(matrixVertexProcedural[i][j].positionsInFloats[0], matrixVertexProcedural[i][j].positionsInFloats[1], matrixVertexProcedural[i][j].positionsInFloats[2]), Vector3.one / 5);
                 }
-                else
+                else if (matrixVertexProcedural[i][j].currentTypeVertex == VertexProcedural.typeOfVertex.NONE)
+                {
+                    Gizmos.color = Color.red;
+                    Gizmos.DrawCube(new Vector3(matrixVertexProcedural[i][j].positionsInFloats[0], matrixVertexProcedural[i][j].positionsInFloats[1], matrixVertexProcedural[i][j].positionsInFloats[2]), Vector3.one / 5);
+                }
+                else if (matrixVertexProcedural[i][j].currentTypeVertex == VertexProcedural.typeOfVertex.PATH)
                 {
                     Gizmos.color = Color.blue;
                     Gizmos.DrawCube(new Vector3(matrixVertexProcedural[i][j].positionsInFloats[0], matrixVertexProcedural[i][j].positionsInFloats[1], matrixVertexProcedural[i][j].positionsInFloats[2]), Vector3.one / 5);

@@ -74,7 +74,7 @@ public class GeometryProcedural : MonoBehaviour
                 triangles[tris + 5] = l_indexZ + sizeX + 2;
             }
         }
-        print("cantidad de vertices: " + vertices.Length + " cantidad de tris: " + triangles.Length / 6);
+
         myMesh.triangles = triangles;
         myMesh.RecalculateNormals();
         myMesh.name = nameMesh;
@@ -108,8 +108,7 @@ public class GeometryProcedural : MonoBehaviour
 
                 matrixProcedural.matrixVertexProcedural[numX][numZ].posXMatrix = numX;
                 matrixProcedural.matrixVertexProcedural[numX][numZ].posZMatrix = numZ;
-                matrixProcedural.matrixVertexProcedural[numX][numZ].typeOfVertex = 0;
-                matrixProcedural.matrixVertexProcedural[numX][numZ].transitable = false;
+                matrixProcedural.matrixVertexProcedural[numX][numZ].currentTypeVertex = VertexProcedural.typeOfVertex.NONE;
                 z += 1f / precisionProcedural;
             }
             z = gameObject.transform.position.z;

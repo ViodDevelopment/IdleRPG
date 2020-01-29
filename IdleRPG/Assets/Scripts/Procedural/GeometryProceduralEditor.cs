@@ -11,27 +11,36 @@ public class GeometryProceduralEditor : Editor
     private int density = 0, precision = 0;
     private string nameMesh;
 
+    #region BoolsTypesOfTool
     private bool activo = false;
     private bool borrar = false;
+    private bool environment = false;
+    private bool lockedCamera = false;
+    private bool cleanAll = false;
+    private bool cleanPath = false;
+    private bool cleanEnvironment = false;
+    #endregion
+
     private float radiusPath = 1;
     private float radiusEnvironment = 1f;
 
     private int currentTab = 0;
     private int currentTabEditMode = 0;
+    private int currentTabClean = 0;
 
     public override void OnInspectorGUI()//La función predeterminada del editor
     {
         GeometryProcedural l_geometryP = (GeometryProcedural)target;
 
-        currentTab = GUILayout.Toolbar(currentTab, new string[] {"Create Mesh", "EditMesh" });
+        currentTab = GUILayout.Toolbar(currentTab, new string[] { "Create Mesh", "EditMesh" });
 
-        switch(currentTab)
+        switch (currentTab)
         {
             case 0:
-                sizeX = EditorGUILayout.IntSlider("size X", sizeX,1,60);
+                sizeX = EditorGUILayout.IntSlider("size X", sizeX, 1, 60);
                 sizeZ = EditorGUILayout.IntSlider("size Z", sizeZ, 1, 60);
-                density = EditorGUILayout.IntSlider("vertex per unit", density,1,4);
-                precision = EditorGUILayout.IntSlider("Precision procedural", precision,1,4);
+                density = EditorGUILayout.IntSlider("vertex per unit", density, 1, 4);
+                precision = EditorGUILayout.IntSlider("Precision procedural", precision, 1, 4);
                 nameMesh = EditorGUILayout.TextField("Name Mesh", nameMesh);
                 if (GUILayout.Button("Create Mesh"))
                 {
@@ -40,20 +49,63 @@ public class GeometryProceduralEditor : Editor
                 }
                 break;
             case 1:
-                radiusPath = Mathf.Clamp(EditorGUILayout.FloatField("Radius Path",radiusPath),0.1f,50f);
+                radiusPath = Mathf.Clamp(EditorGUILayout.FloatField("Radius Path", radiusPath), 0.1f, 50f);
                 radiusEnvironment = Mathf.Clamp(EditorGUILayout.FloatField("Radius Enviroment", radiusEnvironment), 0.1f, 50f);
 
-                currentTabEditMode = GUILayout.Toolbar(currentTabEditMode, new string[] { "Print Path", "Rubish" });
+                EditorGUILayout.LabelField("Print");
+                currentTabEditMode = GUILayout.Toolbar(currentTabEditMode, new string[] { "None", "Print Path", "Environment" });
 
-                if (currentTabEditMode == 0)
+                if (currentTabEditMode != 0)
+                    currentTabClean = 0;
+
+                EditorGUILayout.LabelField("Clean");
+                currentTabClean = GUILayout.Toolbar(currentTabClean, new string[] { "None", "Rubish", "R.Path", "R.Env.", "Clean all" });
+
+                if (currentTabClean != 0)
+                    currentTabEditMode = 0;
+
+
+                switch (currentTabEditMode)
                 {
-                    activo = true;
-                    borrar = false;
+                    case 1:
+                        ResetBools();
+                        activo = true;
+                        break;
+                    case 2:
+                        ResetBools();
+                        environment = true;
+                        break;
+
                 }
-                else if (currentTabEditMode == 1)
+
+                switch (currentTabClean)
                 {
-                    borrar = true;
+                    case 1:
+                        ResetBools();
+                        borrar = true;
+                        break;
+                    case 2:
+                        ResetBools();
+                        cleanPath = true;
+                        break;
+                    case 3:
+                        ResetBools();
+                        cleanEnvironment = true;
+                        break;
+                    case 4:
+                        ResetBools();
+                        cleanAll = true;
+                        break;
+                }
+
+                if (currentTabEditMode > 0 || currentTabClean > 0)
+                    lockedCamera = true;
+                else
+                {
+                    lockedCamera = false;
+                    borrar = false;
                     activo = false;
+                    environment = false;
                 }
 
 
@@ -78,25 +130,42 @@ public class GeometryProceduralEditor : Editor
         if (e.type == EventType.Layout)
             HandleUtility.AddDefaultControl(GUIUtility.GetControlID(GetHashCode(), FocusType.Passive));
 
-        if(activo && EditorApplication.isPlayingOrWillChangePlaymode)
+        if (lockedCamera && EditorApplication.isPlayingOrWillChangePlaymode)
             EditorApplication.ExitPlaymode();
 
-        if ((e.type == EventType.MouseDrag || e.type == EventType.MouseDown) && (activo || borrar))
+        if ((e.type == EventType.MouseDrag || e.type == EventType.MouseDown) && lockedCamera)
         {
-           
+
             GameObject _go = HandleUtility.PickGameObject(e.mousePosition, true);
             if (_go != null)
             {
-                Ray l_rayWorld = HandleUtility.GUIPointToWorldRay(e.mousePosition);
-                float l_numRep = (l_rayWorld.origin.y - _go.transform.position.y) / Mathf.Abs(l_rayWorld.direction.y);
-                Vector3 l_puntoImpacto = l_rayWorld.origin + l_numRep * l_rayWorld.direction;
                 GeometryProcedural l_geometryP = (GeometryProcedural)target;
-                if(activo)
-                    l_geometryP.GetComponent<MatrixOfProcedural>().HitPointOfMatrix(l_puntoImpacto, radiusPath, radiusEnvironment);
-                else if(borrar)
-                    l_geometryP.GetComponent<MatrixOfProcedural>().RubishMode(l_puntoImpacto, radiusPath);
+
+                if (!cleanAll)
+                {
+                    Ray l_rayWorld = HandleUtility.GUIPointToWorldRay(e.mousePosition);
+                    float l_numRep = (l_rayWorld.origin.y - _go.transform.position.y) / Mathf.Abs(l_rayWorld.direction.y);
+                    Vector3 l_puntoImpacto = l_rayWorld.origin + l_numRep * l_rayWorld.direction;
+                    if (activo)
+                        l_geometryP.GetComponent<MatrixOfProcedural>().HitPointOfMatrix(l_puntoImpacto, radiusPath, radiusEnvironment);
+                    else if (borrar)
+                        l_geometryP.GetComponent<MatrixOfProcedural>().RubishMode(l_puntoImpacto, radiusPath);
+                    else if (environment)
+                        l_geometryP.GetComponent<MatrixOfProcedural>().EnvironmentMode(l_puntoImpacto, radiusPath + radiusEnvironment);
+                    else if (cleanPath)
+                        l_geometryP.GetComponent<MatrixOfProcedural>().CleanPath(l_puntoImpacto, radiusPath);
+                    else if (cleanEnvironment)
+                        l_geometryP.GetComponent<MatrixOfProcedural>().CleanEnvironment(l_puntoImpacto, radiusPath + radiusEnvironment);//
+
+
+
+                }
+                else
+                    l_geometryP.GetComponent<MatrixOfProcedural>().CleanAll();
+
 
             }
+
 
             Event.current.Use();
         }
@@ -109,4 +178,16 @@ public class GeometryProceduralEditor : Editor
         }
     }
 
+    private void ResetBools()
+    {
+        activo = false;
+        borrar = false;
+        environment = false;
+        cleanAll = false;
+        cleanPath = false;
+        cleanEnvironment = false;
+    }
+
 }
+
+
