@@ -117,14 +117,14 @@ public class GeometryProcedural : MonoBehaviour
         CreateBinaryFromMatrix();
     }
 
-    private void CreateBinaryFromMatrix()//hace una matriz imaginaria con x precisión y la guarda en binario
+    public void CreateBinaryFromMatrix()//hace una matriz imaginaria con x precisión y la guarda en binario
     {
         BinaryFormatter bf = new BinaryFormatter();
-        FileStream file = File.Create(Application.streamingAssetsPath + "/" + nameMesh + ".dat");
+        FileStream file = File.Create(Application.streamingAssetsPath + "/" + myMesh.name + ".dat");
 
         MatrixToSave datos = new MatrixToSave();
         datos.SetMatrixOfVertexProcedural(gameObject.GetComponent<MatrixOfProcedural>().matrixVertexProcedural);
-        datos.precision = precisionProcedural;
+        datos.precision = gameObject.GetComponent<MatrixOfProcedural>().precisionOfMatrix;
         bf.Serialize(file, datos);
 
         file.Close();

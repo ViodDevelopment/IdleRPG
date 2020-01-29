@@ -10,8 +10,7 @@ public class MatrixOfProcedural : MonoBehaviour
 {
     public List<List<VertexProcedural>> matrixVertexProcedural = new List<List<VertexProcedural>>();
     private static string nameMesh;
-    private static int precisionOfMatrix = 0;
-    float timeToSave = 0;
+    public int precisionOfMatrix = 0;
 
     private void Awake()
     {
@@ -19,7 +18,9 @@ public class MatrixOfProcedural : MonoBehaviour
         {
             nameMesh = gameObject.GetComponent<GeometryProcedural>().myMesh.name;
             if (File.Exists(Application.streamingAssetsPath + "/" + nameMesh + ".dat"))
+            {
                 ObtainMatrixFromBinary();
+            }
         }
 
     }
@@ -55,10 +56,12 @@ public class MatrixOfProcedural : MonoBehaviour
         l_x = Mathf.RoundToInt(l_localPos.x);
         l_z = Mathf.RoundToInt(l_localPos.z);
         matrixVertexProcedural[l_x][l_z].transitable = true;
+    }
 
-        timeToSave = 5;
-        print(timeToSave);
-        StartCoroutine(WaitTimeToSave());
+    public void SaveMatrix()
+    {
+        gameObject.GetComponent<GeometryProcedural>().CreateBinaryFromMatrix();
+        //UnityEditor.EditorApplication.SaveScene();
     }
 
     private void OnDrawGizmos()
@@ -79,15 +82,6 @@ public class MatrixOfProcedural : MonoBehaviour
                 }
             }
         }
-    }
-
-    IEnumerator WaitTimeToSave()
-    {
-        print(timeToSave);
-        timeToSave -= Time.deltaTime;
-        yield return timeToSave;
-        print(timeToSave);
-
     }
 
 }
