@@ -18,13 +18,22 @@ public class EnemyController : MonoBehaviour
 
     public AllyController targetScript = null;
 
+    public GameManager gm;
+
+    public void Initialize()
+    {
+        gm = FindObjectOfType<GameManager>();
+    }
+
     public void RecieveDmg(int _dmg)
     {
         health -= _dmg;
 
         if (health <= 0)
         {
+            CancelInvoke();
             gameObject.SetActive(false);
+            gm.RespawnEnemies();
         }
     }
     public void UpdateEnemy()
@@ -57,6 +66,14 @@ public class EnemyController : MonoBehaviour
             return;
         }
         targetScript.RecieveDmg(basicAttackDamage);
+
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = new Color(255, 0, 0, 10);
+
+        Gizmos.DrawWireSphere(transform.position, range);
 
     }
 }
