@@ -11,11 +11,11 @@ using System.IO;
 
 public class GeometryProcedural : MonoBehaviour
 {
-    [HideInInspector]
-    private static int sizeX = 0, sizeZ = 0;
-    private static int density = 0;
+    private int sizeX = 0, sizeZ = 0;
+    private int density = 0;
     private static int precisionProcedural = 0;
-    private static string nameMesh;
+    private string nameMesh;
+    [HideInInspector]
     public Mesh myMesh;
     private Vector3[] vertices;
     private int[] triangles;
@@ -93,6 +93,8 @@ public class GeometryProcedural : MonoBehaviour
 
         matrixProcedural.matrixVertexProcedural.Clear();
 
+        matrixProcedural.precisionOfMatrix = precisionProcedural;
+
         float x = gameObject.transform.position.x, z = gameObject.transform.position.z;
         for (int numX = 0; numX <= totalSizeX; numX++)
         {
@@ -113,7 +115,7 @@ public class GeometryProcedural : MonoBehaviour
             z = gameObject.transform.position.z;
             x += 1f / precisionProcedural;
         }
-         
+
         CreateBinaryFromMatrix();
     }
 
