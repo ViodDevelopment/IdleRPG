@@ -102,9 +102,9 @@ public class GeometryProcedural : MonoBehaviour
             for (int numZ = 0; numZ <= totalSizeZ; numZ++)
             {
                 matrixProcedural.matrixVertexProcedural[numX].Add(new VertexProcedural());
-                matrixProcedural.matrixVertexProcedural[numX][numZ].positionsInFloats[0] = x + gameObject.transform.position.x;
-                matrixProcedural.matrixVertexProcedural[numX][numZ].positionsInFloats[1] = 0 + gameObject.transform.position.y;
-                matrixProcedural.matrixVertexProcedural[numX][numZ].positionsInFloats[2] = z + gameObject.transform.position.z;
+                matrixProcedural.matrixVertexProcedural[numX][numZ].positionsInFloats[0] = x;//
+                matrixProcedural.matrixVertexProcedural[numX][numZ].positionsInFloats[1] = 0;//ESTAN EN LOCAL
+                matrixProcedural.matrixVertexProcedural[numX][numZ].positionsInFloats[2] = z;//
 
                 matrixProcedural.matrixVertexProcedural[numX][numZ].posXMatrix = numX;
                 matrixProcedural.matrixVertexProcedural[numX][numZ].posZMatrix = numZ;

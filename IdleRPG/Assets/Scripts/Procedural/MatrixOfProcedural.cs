@@ -55,7 +55,8 @@ public class MatrixOfProcedural : MonoBehaviour
         l_localPos *= precisionOfMatrix;
         l_x = Mathf.RoundToInt(l_localPos.x);
         l_z = Mathf.RoundToInt(l_localPos.z);
-        matrixVertexProcedural[l_x][l_z].currentTypeVertex = VertexProcedural.typeOfVertex.PATH;
+        if(l_x >= 0 && l_x < matrixVertexProcedural.Count && l_z >= 0 && l_z < matrixVertexProcedural[0].Count)
+            matrixVertexProcedural[l_x][l_z].currentTypeVertex = VertexProcedural.typeOfVertex.PATH;
 
         float l_incrementAngles = 5f / (_radiusPath + _radiusEnvironment);
         float currentAngles = 0;
@@ -390,17 +391,17 @@ public class MatrixOfProcedural : MonoBehaviour
                 if (matrixVertexProcedural[i][j].currentTypeVertex == VertexProcedural.typeOfVertex.ENVIRONMENT)//por poner numero adecuado
                 {
                     Gizmos.color = Color.cyan;
-                    Gizmos.DrawCube(new Vector3(matrixVertexProcedural[i][j].positionsInFloats[0], matrixVertexProcedural[i][j].positionsInFloats[1], matrixVertexProcedural[i][j].positionsInFloats[2]), Vector3.one / 5);
+                    Gizmos.DrawCube(new Vector3(matrixVertexProcedural[i][j].positionsInFloats[0], matrixVertexProcedural[i][j].positionsInFloats[1], matrixVertexProcedural[i][j].positionsInFloats[2]) + gameObject.transform.position, Vector3.one / 5);
                 }
                 else if (matrixVertexProcedural[i][j].currentTypeVertex == VertexProcedural.typeOfVertex.NONE)
                 {
                     Gizmos.color = Color.red;
-                    Gizmos.DrawCube(new Vector3(matrixVertexProcedural[i][j].positionsInFloats[0], matrixVertexProcedural[i][j].positionsInFloats[1], matrixVertexProcedural[i][j].positionsInFloats[2]), Vector3.one / 5);
+                    Gizmos.DrawCube(new Vector3(matrixVertexProcedural[i][j].positionsInFloats[0], matrixVertexProcedural[i][j].positionsInFloats[1], matrixVertexProcedural[i][j].positionsInFloats[2]) + gameObject.transform.position, Vector3.one / 5);
                 }
                 else if (matrixVertexProcedural[i][j].currentTypeVertex == VertexProcedural.typeOfVertex.PATH)
                 {
                     Gizmos.color = Color.blue;
-                    Gizmos.DrawCube(new Vector3(matrixVertexProcedural[i][j].positionsInFloats[0], matrixVertexProcedural[i][j].positionsInFloats[1], matrixVertexProcedural[i][j].positionsInFloats[2]), Vector3.one / 5);
+                    Gizmos.DrawCube(new Vector3(matrixVertexProcedural[i][j].positionsInFloats[0], matrixVertexProcedural[i][j].positionsInFloats[1], matrixVertexProcedural[i][j].positionsInFloats[2]) + gameObject.transform.position, Vector3.one / 5);
                 }
             }
         }

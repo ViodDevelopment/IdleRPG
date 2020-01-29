@@ -111,8 +111,14 @@ public class GeometryProceduralEditor : Editor
 
                 if (GUILayout.Button("Save Procedural"))
                 {
-                    l_geometryP.GetComponent<MatrixOfProcedural>().SaveMatrix();
-                    activo = false;
+                     MatrixOfProcedural[] l_allMatrix = GameObject.FindObjectsOfType<MatrixOfProcedural>();//Puede ser poco optimo, revisar para mejorar
+                    foreach (var item in l_allMatrix)
+                    {
+                        item.SaveMatrix();
+                    }
+                    ResetBools();
+                    currentTabClean = 0;
+                    currentTabEditMode = 0;
                 }
                 break;
         }
@@ -139,29 +145,31 @@ public class GeometryProceduralEditor : Editor
             GameObject _go = HandleUtility.PickGameObject(e.mousePosition, true);
             if (_go != null)
             {
-                GeometryProcedural l_geometryP = (GeometryProcedural)target;
-
-                if (!cleanAll)
+                if (_go.GetComponent<GeometryProcedural>() != null)
                 {
-                    Ray l_rayWorld = HandleUtility.GUIPointToWorldRay(e.mousePosition);
-                    float l_numRep = (l_rayWorld.origin.y - _go.transform.position.y) / Mathf.Abs(l_rayWorld.direction.y);
-                    Vector3 l_puntoImpacto = l_rayWorld.origin + l_numRep * l_rayWorld.direction;
-                    if (activo)
-                        l_geometryP.GetComponent<MatrixOfProcedural>().HitPointOfMatrix(l_puntoImpacto, radiusPath, radiusEnvironment);
-                    else if (borrar)
-                        l_geometryP.GetComponent<MatrixOfProcedural>().RubishMode(l_puntoImpacto, radiusPath);
-                    else if (environment)
-                        l_geometryP.GetComponent<MatrixOfProcedural>().EnvironmentMode(l_puntoImpacto, radiusPath + radiusEnvironment);
-                    else if (cleanPath)
-                        l_geometryP.GetComponent<MatrixOfProcedural>().CleanPath(l_puntoImpacto, radiusPath);
-                    else if (cleanEnvironment)
-                        l_geometryP.GetComponent<MatrixOfProcedural>().CleanEnvironment(l_puntoImpacto, radiusPath + radiusEnvironment);//
+                    GeometryProcedural l_geometryP = _go.GetComponent<GeometryProcedural>();
+                    if (!cleanAll)
+                    {
+                        Ray l_rayWorld = HandleUtility.GUIPointToWorldRay(e.mousePosition);
+                        float l_numRep = (l_rayWorld.origin.y - _go.transform.position.y) / Mathf.Abs(l_rayWorld.direction.y);
+                        Vector3 l_puntoImpacto = l_rayWorld.origin + l_numRep * l_rayWorld.direction - _go.transform.position;
+                        if (activo)
+                            l_geometryP.GetComponent<MatrixOfProcedural>().HitPointOfMatrix(l_puntoImpacto, radiusPath, radiusEnvironment);
+                        else if (borrar)
+                            l_geometryP.GetComponent<MatrixOfProcedural>().RubishMode(l_puntoImpacto, radiusPath);
+                        else if (environment)
+                            l_geometryP.GetComponent<MatrixOfProcedural>().EnvironmentMode(l_puntoImpacto, radiusPath + radiusEnvironment);
+                        else if (cleanPath)
+                            l_geometryP.GetComponent<MatrixOfProcedural>().CleanPath(l_puntoImpacto, radiusPath);
+                        else if (cleanEnvironment)
+                            l_geometryP.GetComponent<MatrixOfProcedural>().CleanEnvironment(l_puntoImpacto, radiusPath + radiusEnvironment);//
 
 
 
+                    }
+                    else
+                        l_geometryP.GetComponent<MatrixOfProcedural>().CleanAll();
                 }
-                else
-                    l_geometryP.GetComponent<MatrixOfProcedural>().CleanAll();
 
 
             }
