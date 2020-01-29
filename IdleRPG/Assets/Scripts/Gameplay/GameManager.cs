@@ -54,6 +54,16 @@ public class GameManager : MonoBehaviour
         enemies = FindObjectsOfType<EnemyController>();
     }
 
+    public bool NoMoreEnemies()
+    {
+        bool l_noMoreEnemies = true;
+        foreach(EnemyController en in enemies)
+        {
+           if(l_noMoreEnemies = (!en.gameObject.activeSelf && l_noMoreEnemies)) { }
+        }
+        return l_noMoreEnemies;
+    }
+
     //private void OnDrawGizmos()
     //{
     //    foreach(Vector3 pos in enemiesSpawnPos)
