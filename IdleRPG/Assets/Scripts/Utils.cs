@@ -13,7 +13,7 @@ public static class Utils
 
         foreach (GameObject go in gameObjects)
         {
-            if (Vector3.Distance(go.transform.position, thisGo.gameObject.transform.position) <= range)
+            if (Vector3.Distance(go.transform.position, thisGo.gameObject.transform.position) <= range && go.activeSelf)
             {
                 goInRange.Add(go);
             }
@@ -30,6 +30,7 @@ public static class Utils
 
         foreach (GameObject go in list)
         {
+            if (go == null) break;
             distance = Vector3.Distance(go.transform.position, thisGo.transform.position);
             if (distance < closestDistance)
             {
