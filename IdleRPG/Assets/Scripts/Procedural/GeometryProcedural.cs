@@ -126,6 +126,8 @@ public class GeometryProcedural : MonoBehaviour
         MatrixToSave datos = new MatrixToSave();
         datos.SetMatrixOfVertexProcedural(gameObject.GetComponent<MatrixOfProcedural>().matrixVertexProcedural);
         datos.precision = gameObject.GetComponent<MatrixOfProcedural>().precisionOfMatrix;
+        datos.size[0] = sizeX;
+        datos.size[1] = sizeZ;
         bf.Serialize(file, datos);
 
         file.Close();
@@ -138,6 +140,7 @@ public class MatrixToSave
 {
     private List<List<VertexProcedural>> matrixProcedural = new List<List<VertexProcedural>>();
     public int precision;
+    public int[] size = new int[2];
 
     public List<List<VertexProcedural>> GetMatrixOfVertexProcedural()
     {

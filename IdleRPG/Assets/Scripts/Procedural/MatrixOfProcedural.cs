@@ -9,7 +9,10 @@ using System.IO;
 public class MatrixOfProcedural : MonoBehaviour
 {
     public List<List<VertexProcedural>> matrixVertexProcedural = new List<List<VertexProcedural>>();
+    public MatrixOfProcedural[] matrixAdyacent = new MatrixOfProcedural[4];//0 Arriba, 1 derecha, 2 abajo, 3 izquierda
+    public bool searchAdyacnetMatrix = false;
     private static string nameMesh;
+    private int[] sizeMesh = new int[2];
     public int precisionOfMatrix = 0;
 
     private void Awake()
@@ -33,10 +36,116 @@ public class MatrixOfProcedural : MonoBehaviour
             if (File.Exists(Application.streamingAssetsPath + "/" + nameMesh + ".dat"))
                 ObtainMatrixFromBinary();
         }
+
+        if (searchAdyacnetMatrix)
+        {
+            SearchAdyacentMatrix();
+            searchAdyacnetMatrix = false;
+        }
+    }
+
+    public int[] GetSizeMesh()
+    {
+        return sizeMesh;
+    }
+
+    public void SearchAdyacentMatrix()
+    {
+        MatrixOfProcedural[] l_matrixOthers = GameObject.FindObjectsOfType<MatrixOfProcedural>();
+        MatrixOfProcedural[] l_matrixSubs = new MatrixOfProcedural[4];
+        bool adyacent = true;
+        foreach (MatrixOfProcedural item in l_matrixOthers)
+        {
+            if (item != this)
+            {
+                Vector3 distance = item.transform.position - gameObject.transform.position;
+                adyacent = true;
+
+                if (distance.x != 0 && distance.z != 0)
+                    adyacent = false;
+
+                if (adyacent)
+                {
+                    if (distance.x == 0)
+                        distance.x = distance.z * 2;
+                    if (distance.z == 0)
+                        distance.z = distance.x * 2;
+
+                    if (Mathf.Abs(distance.x) < Mathf.Abs(distance.z))
+                    {
+                        if (distance.x > 0 && distance.x == sizeMesh[0] / 2)
+                        {
+
+                            if (matrixAdyacent[1] != null)
+                            {
+                                if (distance.x <= (matrixAdyacent[1].gameObject.transform.position - gameObject.transform.position).x)
+                                {
+                                    l_matrixSubs[1] = item;
+                                }
+                            }
+
+                            else
+                                l_matrixSubs[1] = item;
+                        }
+                        else if (distance.x * -1 == item.GetSizeMesh()[0] / 2)
+                        {
+
+                            if (matrixAdyacent[3] != null)
+                            {
+                                if (distance.x >= (matrixAdyacent[3].gameObject.transform.position - gameObject.transform.position).x)
+                                {
+                                    l_matrixSubs[3] = item;
+                                }
+                            }
+
+                            else
+                                l_matrixSubs[3] = item;
+                        }
+                    }
+                    else
+                    {
+                        if (distance.z > 0 && distance.z == sizeMesh[1] / 2)
+                        {
+
+                            if (matrixAdyacent[0] != null)
+                            {
+                                if (distance.z <= (matrixAdyacent[0].gameObject.transform.position - gameObject.transform.position).z)
+                                {
+                                    l_matrixSubs[0] = item;
+                                }
+                            }
+
+                            else
+                                l_matrixSubs[0] = item;
+
+                        }
+                        else if (distance.z * -1 == item.GetSizeMesh()[1] / 2)
+                        {
+                            if (matrixAdyacent[2] != null)
+                            {
+                                if (distance.z >= (matrixAdyacent[2].gameObject.transform.position - gameObject.transform.position).z)
+                                {
+                                    l_matrixSubs[2] = item;
+                                }
+                            }
+
+                            else
+                                l_matrixSubs[2] = item;
+
+                        }
+                    }
+                }
+            }
+        }
+
+        matrixAdyacent = l_matrixSubs;
     }
 
     private void ObtainMatrixFromBinary() //obtiene la matriz del binario
     {
+        if (sizeMesh.Length != 2)
+            sizeMesh = new int[2];
+
         BinaryFormatter bf = new BinaryFormatter();
         FileStream file = File.Open(Application.streamingAssetsPath + "/" + nameMesh + ".dat", FileMode.Open);
 
@@ -44,6 +153,11 @@ public class MatrixOfProcedural : MonoBehaviour
 
         matrixVertexProcedural = datos.GetMatrixOfVertexProcedural();
         precisionOfMatrix = datos.precision;
+        if (datos.size.Length == 2)
+        {
+            sizeMesh[0] = datos.size[0];
+            sizeMesh[1] = datos.size[1];
+        }
         file.Close();
     }
 
@@ -55,7 +169,7 @@ public class MatrixOfProcedural : MonoBehaviour
         l_localPos *= precisionOfMatrix;
         l_x = Mathf.RoundToInt(l_localPos.x);
         l_z = Mathf.RoundToInt(l_localPos.z);
-        if(l_x >= 0 && l_x < matrixVertexProcedural.Count && l_z >= 0 && l_z < matrixVertexProcedural[0].Count)
+        if (l_x >= 0 && l_x < matrixVertexProcedural.Count && l_z >= 0 && l_z < matrixVertexProcedural[0].Count)
             matrixVertexProcedural[l_x][l_z].currentTypeVertex = VertexProcedural.typeOfVertex.PATH;
 
         float l_incrementAngles = 5f / (_radiusPath + _radiusEnvironment);
