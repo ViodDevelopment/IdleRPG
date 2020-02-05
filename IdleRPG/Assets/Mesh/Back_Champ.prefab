@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5443558237497994197}
   - component: {fileID: 5443558237497994196}
   - component: {fileID: 5443558237497994195}
-  - component: {fileID: 5443558237497994194}
+  - component: {fileID: -7970384355051969509}
   m_Layer: 8
   m_Name: Back_Champ
   m_TagString: Back
@@ -93,15 +93,16 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
---- !u!114 &5443558237497994194
+--- !u!114 &-7970384355051969509
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5443558237497994193}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5e115fb25e6a94e4badb1272cef9976a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  speed: 10

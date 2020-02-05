@@ -4,30 +4,41 @@ using UnityEngine;
 
 public class CameraEspecial : MonoBehaviour
 {
-    private Collider ObjetoGolpeado;
+    public bool avance;
+    private Vector3 copiaPosicion;
+
+
     // Start is called before the first frame update
     void Start()
     {
-
+        avance = true;
     }
 
     // Update is called once per frame
     void Update()
     {
-
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
-
-        if (Physics.Raycast(ray, out hit, 100) && hit.distance <= 10)
+        if (avance)
         {
-            Vector3 PosicionPrueba = new Vector3(0f, 0f, 10f);
-            //print("La distacia es " + hit.distance);
-            ObjetoGolpeado = hit.collider;
-            print(ObjetoGolpeado.transform.position.x);
-            ObjetoGolpeado.transform.position = PosicionPrueba;
-            //ObjetoGolpeado.attachedRigidbody.MovePosition(PosicionPrueba);
-        }
-        //Debug.DrawLine(ray.origin, hit.point);
+            copiaPosicion = transform.position;
+            copiaPosicion.y = 12.5f;
+            transform.position = copiaPosicion;
+            print(transform.rotation);
+            transform.rotation = Change(0.2f,0.4f,-0.1f);
 
+        }
+        else
+        {
+            copiaPosicion = transform.position;
+            copiaPosicion.y = 18;
+            transform.position = copiaPosicion;
+            print(transform.rotation);
+            transform.rotation = Change(0.3f, 0.3f, -0.1f);
+        }
+     
+    }
+
+    private static Quaternion Change(float x, float y, float z)
+    {
+        return new Quaternion(x, y, z, 1);
     }
 }
