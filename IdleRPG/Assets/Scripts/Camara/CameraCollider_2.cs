@@ -16,7 +16,7 @@ public class CameraCollider_2 : MonoBehaviour
     void Start()
     {
         Resultado = new Vector3(0f, 0f, 0f);
-        DistanciaColliderX = -6;
+        DistanciaColliderX = -10;
         DistanciaColliderZ = 7;
     }
 

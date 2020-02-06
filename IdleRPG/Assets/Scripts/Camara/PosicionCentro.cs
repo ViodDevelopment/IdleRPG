@@ -5,26 +5,30 @@ using UnityEngine;
 public class PosicionCentro : MonoBehaviour
 {
 
-    public GameObject Champ_01;
-    public GameObject Champ_02;
-    public GameObject Champ_03;
-    public GameObject Champ_04;
+    public GameObject champ_01;
+    public GameObject champ_02;
+    public GameObject champ_03;
+    public GameObject champ_04;
 
-    private GameObject[] ListaChamps  = new GameObject[4];
+    private GameObject[] listaChaps  = new GameObject[4];
 
-    public GameObject FrontZone;
-    public GameObject BackZone;
+    public GameObject frontZone;
+    public GameObject backZone;
 
-    
+    private Vector3 zonaRandom;
+    private float radioChamp = 3f;
+    public int layerMask = 8;
+    public bool zonaSinCollider = false;
 
-   
+
+
     // Start is called before the first frame update
     void Start()
     {
-        ListaChamps[0] = Champ_01;
-        ListaChamps[1] = Champ_02;
-        ListaChamps[2] = Champ_03;
-        ListaChamps[3] = Champ_04;
+        listaChaps[0] = champ_01;
+        listaChaps[1] = champ_02;
+        listaChaps[2] = champ_03;
+        listaChaps[3] = champ_04;
 
         Comprobador();
     }
@@ -35,74 +39,63 @@ public class PosicionCentro : MonoBehaviour
     
        // transform.position = Calcular_Punto();
     }
-    /*
-    Vector3 Calcular_Punto()
-    {
-        Vector3 Resultado = new Vector3(0f, 0f, 0f);
-
-        Resultado.x = (Champ_01.transform.position.x + Champ_02.transform.position.x + Champ_03.transform.position.x + Champ_04.transform.position.x + Champ_05.transform.position.x) / 5;
-        Resultado.y = (Champ_01.transform.position.y + Champ_02.transform.position.y + Champ_03.transform.position.y + Champ_04.transform.position.y + Champ_05.transform.position.y) / 5;
-        Resultado.z = (Champ_01.transform.position.z + Champ_02.transform.position.z + Champ_03.transform.position.z + Champ_04.transform.position.z + Champ_05.transform.position.z) / 5;
-
-        return Resultado;
-    }*/
+    
     void Comprobador()
     {
         for (int i = 0; i<=3; i++)
         {
-            if (ListaChamps[i].CompareTag("Front"))
+            if (listaChaps[i].CompareTag("Front"))
             {
-                //antes de pasarle la ubicacion hacer lo del overlapSphere
 
+                while (!zonaSinCollider)
+                {
+                    zonaRandom = PuntoRandomBound(frontZone.GetComponent<Collider>().bounds);
+                    Posicionamiento(zonaRandom, radioChamp, layerMask);
+                }
+                zonaSinCollider = false;
 
-                Instantiate(ListaChamps[i], PuntoRandomBound(FrontZone.GetComponent<Collider>().bounds), Quaternion.identity);
+                Instantiate(listaChaps[i], zonaRandom, Quaternion.identity);
             }
-            else if (ListaChamps[i].CompareTag("Back"))
+            else if (listaChaps[i].CompareTag("Back"))
             {
-                Instantiate(ListaChamps[i], PuntoRandomBound(BackZone.GetComponent<Collider>().bounds), Quaternion.identity);
+                zonaRandom = PuntoRandomBound(backZone.GetComponent<Collider>().bounds);
+
+                while (!zonaSinCollider)
+                {
+                    zonaRandom = PuntoRandomBound(backZone.GetComponent<Collider>().bounds);
+                    Posicionamiento(zonaRandom, radioChamp, layerMask);
+                }
+                zonaSinCollider = false;
+
+                Instantiate(listaChaps[i], zonaRandom, Quaternion.identity);
             }
         }
     }
+
+
+
     public static Vector3 PuntoRandomBound(Bounds _bounds)
     {
         return new Vector3(
              Random.Range(_bounds.min.x, _bounds.max.x),
-            // Random.Range(_bounds.min.y, _bounds.max.y),
-                1f,
+             1f,
              Random.Range(_bounds.min.z, _bounds.max.z)
             );
     }
 
 
-    void Posicionamiento()
+    void Posicionamiento( Vector3 _Centro, float _Radio, int _CapaMask)
     {
+        int _layer = 1 << _CapaMask;
+        Collider[] hitColliders = Physics.OverlapSphere(_Centro, _Radio, _layer);
+        print(hitColliders.Length);
 
-    }
-
-    /*
-     * private Vector3 RandomNavmeshLocation(float radius) {
-        Vector3 randomDirection = Random.insideUnitSphere * radius;
-        randomDirection += transform.position;
-        NavMeshHit hit;
-        Vector3 finalPosition = Vector3.zero;
-        if (NavMesh.SamplePosition(randomDirection, out hit, radius, 1))
+        if (hitColliders.Length==0)
         {
-            finalPosition = hit.position;
+          zonaSinCollider = true;
         }
-        return finalPosition;
-    }*/
-
-/*
- *  void ExplosionDamage(Vector3 center, float radius)
-{
-    Collider[] hitColliders = Physics.OverlapSphere(center, radius);
-    int i = 0;
-    while (i < hitColliders.Length)
-    {
-        hitColliders[i].SendMessage("AddDamage");
-        i++;
     }
-}
-*/
+
+ 
 
 }

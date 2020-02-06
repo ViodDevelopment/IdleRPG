@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-
 public class AllyController : MonoBehaviour
 {
    
@@ -33,7 +32,11 @@ public class AllyController : MonoBehaviour
 
     public int hitsTaken = 0, hitsDealt = 0;
 
+    public SpecialAbility[] specialAbilities;
 
+    public int selectedAbility, numOfAb;
+
+    
     public void RecieveDmg(int dmg)
     {
         health -= dmg;
@@ -47,7 +50,40 @@ public class AllyController : MonoBehaviour
         }
     }
 
+    public void BasicAttack()
+    {
+        if (target == null)
+        {
+            CancelInvoke();
+            return;
+        }
+        Debug.Log("Attacking :" + target);
+        targetScript.RecieveDmg(basicAttackDmg);
+
+        hitsDealt += 1;
+    }
+
+    public void SpecialAbility()
+    {
+        if (specialAbilities[selectedAbility].energyRequired <= energy)
+        {
+            specialAbilities[selectedAbility].UseAb();
+            energy -= specialAbilities[selectedAbility].energyRequired;
+        }
+        else
+        {
+            //Not enough energy
+        }
+        Debug.Log("Special ability from" + gameObject.name);
+        
+    }
+
     #endregion
+
+    public void Initialize()
+    {
+        specialAbilities = new SpecialAbility[numOfAb];
+    }
 
     public void UpdateAlly()
     {
@@ -72,26 +108,18 @@ public class AllyController : MonoBehaviour
 
     }
 
-    public void BasicAttack()
-    {
-        if (target == null)
-        {
-            CancelInvoke();
-            return;
-        }
-        Debug.Log("Attacking :" + target);
-        targetScript.RecieveDmg(basicAttackDmg);
-
-        hitsDealt += 1;
-    }
+   
 
     private void OnDrawGizmos()
     {
         Gizmos.color = new Color(0,255,0,10);
         
         Gizmos.DrawWireSphere(transform.position, range);
-
     }
+
+    
 
 
 }
+
+
