@@ -79,6 +79,7 @@ public class BaseDeDatosAllies
             instance.SaveBaseOfDates();
         }
         else Debug.Log("no existe el csv");
+
     }
 
 

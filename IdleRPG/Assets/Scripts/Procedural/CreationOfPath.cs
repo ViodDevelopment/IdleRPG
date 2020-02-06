@@ -26,7 +26,6 @@ public class CreationOfPath : MonoBehaviour
                 newGO.tag = "Respawn";
                 break;
         }
-
         path.listPath.Add(newGO.transform);
         path.UpdateCamino();
     }
