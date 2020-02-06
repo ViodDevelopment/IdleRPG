@@ -154,7 +154,7 @@ public class GeometryProceduralEditor : Editor
                         float l_numRep = (l_rayWorld.origin.y - _go.transform.position.y) / Mathf.Abs(l_rayWorld.direction.y);
                         Vector3 l_puntoImpacto = l_rayWorld.origin + l_numRep * l_rayWorld.direction - _go.transform.position;
                         if (activo)
-                            l_geometryP.GetComponent<MatrixOfProcedural>().HitPointOfMatrix(l_puntoImpacto, radiusPath, radiusEnvironment);
+                            l_geometryP.GetComponent<MatrixOfProcedural>().PrintPath(l_puntoImpacto, radiusPath, radiusEnvironment);
                         else if (borrar)
                             l_geometryP.GetComponent<MatrixOfProcedural>().RubishMode(l_puntoImpacto, radiusPath);
                         else if (environment)

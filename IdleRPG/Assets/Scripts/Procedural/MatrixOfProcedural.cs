@@ -161,7 +161,8 @@ public class MatrixOfProcedural : MonoBehaviour
         file.Close();
     }
 
-    public void HitPointOfMatrix(Vector3 _vector, float _radiusPath, float _radiusEnvironment)//hacer en el otro scipt lo de crear un collider para el terreno
+    #region Pincel
+    public void PrintPath(Vector3 _vector, float _radiusPath, float _radiusEnvironment)//hacer en el otro scipt lo de crear un collider para el terreno
     {
         Vector3 l_localPos = transform.InverseTransformPoint(_vector);
         int l_x;
@@ -488,6 +489,8 @@ public class MatrixOfProcedural : MonoBehaviour
             }
         }
     }
+
+    #endregion
 
     public void SaveMatrix()
     {
