@@ -51,16 +51,52 @@ public class BaseDeDatosAllies
                     Debug.Log(l_id);
                     l_allie.id = l_id;
                     l_allie.name = valor[0];
+                    switch(int.Parse(valor[1]))
+                    {
+                        case 0:
+                            l_allie.faction = InfoAllies.TypeOfFactions.IMPERIO;//si peta es pq el excel todavia no lo tiene en numeros estos datos
+                            break;
+                        case 1:
+                            l_allie.faction = InfoAllies.TypeOfFactions.MISTICO;
+                            break;
+                        case 2:
+                            l_allie.faction = InfoAllies.TypeOfFactions.YOKAI;
+                            break;
+                        case 3:
+                            l_allie.faction = InfoAllies.TypeOfFactions.DIOS;
+                            break;
+                    }
+
+                    switch (int.Parse(valor[2]))
+                    {
+                        case 0:
+                            l_allie.classe = InfoAllies.TypeOfClass.TANQUE;
+                            break;
+                        case 1:
+                            l_allie.classe = InfoAllies.TypeOfClass.MELEE;
+                            break;
+                        case 2:
+                            l_allie.classe = InfoAllies.TypeOfClass.DISTANCIA;
+                            break;
+                        case 3:
+                            l_allie.classe = InfoAllies.TypeOfClass.APOYO;
+                            break;
+                    }
+
+
+                    if (valor[3] == "M")
+                        l_allie.melee = true;
+                    else l_allie.melee = false;
                     //añadir mas cosas
-                }else if(l_row >= 3 && l_row <= 202)
+                }else if(l_row >= 4 && l_row <= 203)
                 {
                     if (valor[1] != "")
                     {
                         l_allie.maxLevel = int.Parse(valor[0]);
-                        l_allie.atackList.Add(int.Parse(valor[1]));
-                        l_allie.defensList.Add(int.Parse(valor[2]));
-                        l_allie.atackSpeed = float.Parse(valor[3]);
-                        l_allie.lifeList.Add(int.Parse(valor[4]));
+                        l_allie.lifeList.Add(int.Parse(valor[1]));
+                        l_allie.atackList.Add(int.Parse(valor[2]));
+                        l_allie.defensList.Add(int.Parse(valor[3]));
+                        l_allie.atackSpeed = float.Parse(valor[4]);
                     }
                 }
 
