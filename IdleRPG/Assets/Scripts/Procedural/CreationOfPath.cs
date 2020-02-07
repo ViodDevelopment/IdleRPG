@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class CreationOfPath : MonoBehaviour
 {
-    private Path path;
+    private MyPath path;
 
     public void CreateNextPointPath(GameObject _mesh, float _yPos, Vector3 _impactPoint, int _state)
     {
-        path = gameObject.GetComponent<Path>();
+        path = gameObject.GetComponent<MyPath>();
         GameObject newGO = new GameObject();
         newGO.name = "Point " + path.listPath.Count;
         newGO.transform.position = _impactPoint + new Vector3(0, _yPos, 0);

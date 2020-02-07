@@ -9,12 +9,12 @@ public class PruebaParaLlamarBBDD : MonoBehaviour
     void Start()
     {
         GameManager.GetInstance();
-        texto.text = GameManager.GetInstance().listInfoAllies.Count.ToString();
     }
 
     // Update is called once per frame
     void Update()
     {
+        texto.text = GameManager.GetInstance().listInfoAllies.Count.ToString()  +"  " + (int)Time.time;
 
     }
 }

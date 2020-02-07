@@ -21,14 +21,16 @@ public class BaseDeDatosAllies : MonoBehaviour
     private string originalPathEnemies = "enemiesBBDD.dat";
     private string nameRuteEnemies = "";
     private string nameRuteOriginalEnemies = "";
-
     private void Awake()
     {
         GameObject go = GameObject.Find("BaseDeDatos");
         if (go == null || go == gameObject)
         {
-            instance = new BaseDeDatosAllies();
-            DontDestroyOnLoad(gameObject);
+            if (instance == null)
+            {
+                instance = this;
+                DontDestroyOnLoad(gameObject);
+            }
             if (!Directory.Exists(Application.persistentDataPath + instance.folderDestination))
             {
                 Directory.CreateDirectory(Application.persistentDataPath + instance.folderDestination);
@@ -41,7 +43,7 @@ public class BaseDeDatosAllies : MonoBehaviour
                 instance.ReadCSV();
             }
 
-            StartCoroutine(instance.CopyPalabrasBinaryToPersistentPath());
+            instance.StartCoroutine(instance.CopyPalabrasBinaryToPersistentPath());
 
         }
         else if (go != gameObject)
@@ -180,7 +182,6 @@ public class BaseDeDatosAllies : MonoBehaviour
             //Read the File from streamingAssets. Use WWW for Android
             if (dbStreamingAsset.Contains("://") || dbStreamingAsset.Contains(":///"))
             {
-                print("contain");
                 WWW www = new WWW(dbStreamingAsset);
                 yield return www;
                 result = www.bytes;
@@ -188,26 +189,16 @@ public class BaseDeDatosAllies : MonoBehaviour
             else
             {
                 result = File.ReadAllBytes(dbStreamingAsset);
-
             }
 
+            //Create Directory if it does not exist
+            if (!Directory.Exists(Path.GetDirectoryName(dbDestination)))
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(dbDestination));
+            }
 
             //Copy the data to the persistentDataPath where the database API can freely access the file
             File.WriteAllBytes(dbDestination, result);
-            if (File.Exists(Application.persistentDataPath + folderDestination + "/" + nameRute))
-            {
-                Debug.Log("Guardada la Base de Datos de Allies");
-
-                BinaryFormatter l_bf = new BinaryFormatter();
-                FileStream l_file = File.Create(Application.persistentDataPath + folderDestination + "/" + nameRute);
-
-                BaseOfAllies l_datos = new BaseOfAllies();
-                l_datos.infoAllies = GameManager.GetInstance().listInfoAllies;
-
-                l_bf.Serialize(l_file, l_datos);
-
-                l_file.Close();
-            }
         }
 
         if (File.Exists(Application.persistentDataPath + folderDestination + "/" + lastFecha + originalPath))
@@ -239,7 +230,6 @@ public class BaseDeDatosAllies : MonoBehaviour
     {
 
         Debug.Log("Cargada la Base de Datos de Allies");
-        List<BaseOfAllies> l_allies = new List<BaseOfAllies>();
         BinaryFormatter l_bf = new BinaryFormatter();
         FileStream l_file = File.Open(Application.persistentDataPath + folderDestination + "/" + nameRute, FileMode.Open);
 
@@ -269,7 +259,6 @@ public class BaseDeDatosAllies : MonoBehaviour
     {
 
         Debug.Log("Cargado el progreso de los aliados");
-        List<BaseOfAllies> l_allies = new List<BaseOfAllies>();
         BinaryFormatter l_bf = new BinaryFormatter();
         FileStream l_file = File.Open(Application.persistentDataPath + folderDestination + nameRutePlayerSave, FileMode.Open);
 
@@ -300,7 +289,6 @@ public class BaseDeDatosAllies : MonoBehaviour
     {
 
         Debug.Log("Cargado el progreso de las etapas");
-        List<BaseOfAllies> l_allies = new List<BaseOfAllies>();
         BinaryFormatter l_bf = new BinaryFormatter();
         FileStream l_file = File.Open(Application.persistentDataPath + folderDestination + nameRuteFaseProgress, FileMode.Open);
 

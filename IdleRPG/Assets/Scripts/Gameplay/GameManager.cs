@@ -6,11 +6,11 @@ public class GameManager
 {
     private static GameManager instance;
 
-    public List<InfoAllies> alliesOwned = new List<InfoAllies>();
-    public List<InfoAllies> alliesNotOwned = new List<InfoAllies>();
-    public List<InfoAllies> listInfoAllies = new List<InfoAllies>();
-    public int fase;
-    public int etapa;
+    [SerializeField] public List<InfoAllies> alliesOwned = new List<InfoAllies>();
+    [SerializeField] public List<InfoAllies> alliesNotOwned = new List<InfoAllies>();
+    [SerializeField] public List<InfoAllies> listInfoAllies = new List<InfoAllies>();
+    [SerializeField] public int fase;
+    [SerializeField] public int etapa;
 
     public static GameManager GetInstance()
     {
