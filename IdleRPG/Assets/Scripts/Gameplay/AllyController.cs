@@ -3,22 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class AllyController : MonoBehaviour
+public class AllyController : AllyPrimitive
 {
    
-    enum States { IDLE, MOVING, FIGHTING, DEAD };
-
-    States currentState = 0;
-
     #region Combat
-
-    [Header("Cosas que si salen")]
-    public int health, energy, basicAttackDmg;
-
-    public float range;
-
-    public float basicAttackCooldown;
-
 
     [Header("Cosas que solo son de debug")]
 
@@ -30,25 +18,12 @@ public class AllyController : MonoBehaviour
 
     public bool isAttacking = false;
 
-    public int hitsTaken = 0, hitsDealt = 0;
-
     public SpecialAbility[] specialAbilities;
 
     public int selectedAbility, numOfAb;
 
     
-    public void RecieveDmg(int dmg)
-    {
-        health -= dmg;
 
-        hitsTaken += 1;
-
-        if (health <= 0)
-        {
-            CancelInvoke();
-            currentState = States.DEAD;
-        }
-    }
 
     public void BasicAttack()
     {
@@ -58,17 +33,17 @@ public class AllyController : MonoBehaviour
             return;
         }
         Debug.Log("Attacking :" + target);
-        targetScript.RecieveDmg(basicAttackDmg);
+        targetScript.RecieveDmg(currentAtack);
 
-        hitsDealt += 1;
+        hitsDealt++;
     }
 
     public void SpecialAbility()
     {
-        if (specialAbilities[selectedAbility].energyRequired <= energy)
+        if (specialAbilities[selectedAbility].energyRequired <= currentEnergy)
         {
             specialAbilities[selectedAbility].UseAb();
-            energy -= specialAbilities[selectedAbility].energyRequired;
+            currentEnergy -= specialAbilities[selectedAbility].energyRequired;
         }
         else
         {
@@ -103,7 +78,7 @@ public class AllyController : MonoBehaviour
         else if (target && !isAttacking)
         {
             isAttacking = true;
-            InvokeRepeating("BasicAttack", 0, basicAttackCooldown);
+            InvokeRepeating("BasicAttack", 0, currentAtackSpeed);
         }
 
     }

@@ -9,8 +9,10 @@ using System.IO;
 public class BaseDeDatosAllies
 {
     private static BaseDeDatosAllies instance;
-    public List<InfoAllies> listInfoAllies = new List<InfoAllies>();
     private string nameRute = "/alliesBBDD.dat";
+    private string nameRutePlayerSave = "/progressPlayerAlly.dat";
+    private string nameRuteFaseProgress = "/ProgressEtapasAndFases.dat";
+    private string folderDestination = "/PlayerProgress";
     private string nameCSV = "/alliesStats.csv";
 
     public static BaseDeDatosAllies GetInstance()
@@ -18,10 +20,36 @@ public class BaseDeDatosAllies
         if (instance == null)
         {
             instance = new BaseDeDatosAllies();
-            if(!File.Exists(Application.streamingAssetsPath + instance.nameRute))
+            if (!Directory.Exists(instance.folderDestination))
+            {
+                Directory.CreateDirectory(instance.folderDestination);
+            }
+
+            if (!File.Exists(Application.streamingAssetsPath + instance.nameRute))
                 instance.ReadCSV();
             else
-            instance.LoadBaseOfDates();
+            {
+                //cambiar y copiar el streaming assets a persistent path
+                instance.LoadBaseOfDates();
+            }
+
+            if (!File.Exists(Application.streamingAssetsPath + instance.nameRutePlayerSave))
+            {
+                //poner datos minimos 
+                instance.SaveProgressAllies();
+            }
+            else
+                instance.LoadProgressAllies();
+
+            if (!File.Exists(Application.streamingAssetsPath + instance.nameRuteFaseProgress))
+            {
+                GameManager.GetInstance().fase = 0;
+                GameManager.GetInstance().etapa = 0;
+                instance.SaveProgressEtapaAndFase();
+            }
+            else
+                instance.LoadProgressEtapas();
+
         }
         return instance;
     }
@@ -50,8 +78,9 @@ public class BaseDeDatosAllies
                 {
                     Debug.Log(l_id);
                     l_allie.id = l_id;
+                    l_allie.currentLevel = 1;
                     l_allie.name = valor[0];
-                    switch(int.Parse(valor[1]))
+                    /*switch(int.Parse(valor[1]))
                     {
                         case 0:
                             l_allie.faction = InfoAllies.TypeOfFactions.IMPERIO;//si peta es pq el excel todavia no lo tiene en numeros estos datos
@@ -87,7 +116,7 @@ public class BaseDeDatosAllies
                     if (valor[3] == "M")
                         l_allie.melee = true;
                     else l_allie.melee = false;
-                    //añadir mas cosas
+                    //añadir mas cosas*/
                 }else if(l_row >= 4 && l_row <= 203)
                 {
                     if (valor[1] != "")
@@ -95,8 +124,8 @@ public class BaseDeDatosAllies
                         l_allie.maxLevel = int.Parse(valor[0]);
                         l_allie.lifeList.Add(int.Parse(valor[1]));
                         l_allie.atackList.Add(int.Parse(valor[2]));
-                        l_allie.defensList.Add(int.Parse(valor[3]));
-                        l_allie.atackSpeed = float.Parse(valor[4]);
+                        //l_allie.defensList.Add(int.Parse(valor[3]));
+                        l_allie.atackSpeed = float.Parse(valor[3]);
                     }
                 }
 
@@ -106,7 +135,7 @@ public class BaseDeDatosAllies
                 {
                     l_row = 0;
                     l_id++;
-                    listInfoAllies.Add(l_allie);
+                    GameManager.GetInstance().listInfoAllies.Add(l_allie);
                 }
 
                 if (valor.Length == 0)
@@ -124,10 +153,10 @@ public class BaseDeDatosAllies
         Debug.Log("Guardada la Base de Datos de Allies");
 
         BinaryFormatter l_bf = new BinaryFormatter();
-        FileStream l_file = File.Create(Application.streamingAssetsPath + nameRute);
+        FileStream l_file = File.Create(Application.persistentDataPath + nameRute);
 
         BaseOfAllies l_datos = new BaseOfAllies();
-        l_datos.infoAllies = listInfoAllies;
+        l_datos.infoAllies = GameManager.GetInstance().listInfoAllies;
 
         l_bf.Serialize(l_file, l_datos);
 
@@ -140,10 +169,72 @@ public class BaseDeDatosAllies
         Debug.Log("Cargada la Base de Datos de Allies");
         List<BaseOfAllies> l_allies = new List<BaseOfAllies>();
         BinaryFormatter l_bf = new BinaryFormatter();
-        FileStream l_file = File.Open(Application.streamingAssetsPath + nameRute, FileMode.Open);
+        FileStream l_file = File.Open(Application.persistentDataPath + nameRute, FileMode.Open);
 
         BaseOfAllies l_datos = (BaseOfAllies)l_bf.Deserialize(l_file);
-        listInfoAllies = l_datos.infoAllies;
+        GameManager.GetInstance().listInfoAllies = l_datos.infoAllies;
+
+        l_file.Close();
+    }
+
+    public void SaveProgressAllies()
+    {
+        Debug.Log("Progreso Guardado");
+
+        BinaryFormatter l_bf = new BinaryFormatter();
+        FileStream l_file = File.Create(Application.persistentDataPath + nameRutePlayerSave);
+
+        ProgressPlayerAllies l_datos = new ProgressPlayerAllies();
+        l_datos.alliesOwned = GameManager.GetInstance().alliesOwned;
+        l_datos.alliesNotOwned = GameManager.GetInstance().alliesNotOwned;
+
+        l_bf.Serialize(l_file, l_datos);
+
+        l_file.Close();
+    }
+
+    private void LoadProgressAllies()
+    {
+
+        Debug.Log("Cargado el progreso de los aliados");
+        List<BaseOfAllies> l_allies = new List<BaseOfAllies>();
+        BinaryFormatter l_bf = new BinaryFormatter();
+        FileStream l_file = File.Open(Application.persistentDataPath + nameRutePlayerSave, FileMode.Open);
+
+        ProgressPlayerAllies l_datos = (ProgressPlayerAllies)l_bf.Deserialize(l_file);
+        GameManager.GetInstance().alliesOwned = l_datos.alliesOwned;
+        GameManager.GetInstance().alliesNotOwned = l_datos.alliesNotOwned;
+
+        l_file.Close();
+    }
+
+    public void SaveProgressEtapaAndFase()
+    {
+        Debug.Log("Progreso de fases y etapas Guardado");
+
+        BinaryFormatter l_bf = new BinaryFormatter();
+        FileStream l_file = File.Create(Application.persistentDataPath + nameRuteFaseProgress);
+
+        ProgresPlayerEtapasAndFases l_datos = new ProgresPlayerEtapasAndFases();
+        l_datos.fase = GameManager.GetInstance().fase;
+        l_datos.etapa = GameManager.GetInstance().etapa;
+
+        l_bf.Serialize(l_file, l_datos);
+
+        l_file.Close();
+    }
+
+    private void LoadProgressEtapas()
+    {
+
+        Debug.Log("Cargado el progreso de las etapas");
+        List<BaseOfAllies> l_allies = new List<BaseOfAllies>();
+        BinaryFormatter l_bf = new BinaryFormatter();
+        FileStream l_file = File.Open(Application.persistentDataPath + nameRuteFaseProgress, FileMode.Open);
+
+        ProgresPlayerEtapasAndFases l_datos = (ProgresPlayerEtapasAndFases)l_bf.Deserialize(l_file);
+        GameManager.GetInstance().fase = l_datos.fase;
+        GameManager.GetInstance().etapa = l_datos.etapa;
 
         l_file.Close();
     }
@@ -154,4 +245,17 @@ public class BaseDeDatosAllies
 public class BaseOfAllies
 {
     public List<InfoAllies> infoAllies = new List<InfoAllies>();
+}
+
+[Serializable]
+public class ProgressPlayerAllies
+{
+    public List<InfoAllies> alliesOwned = new List<InfoAllies>();
+    public List<InfoAllies> alliesNotOwned = new List<InfoAllies>();
+}
+[Serializable]
+public class ProgresPlayerEtapasAndFases
+{
+    public int fase;
+    public int etapa;
 }
