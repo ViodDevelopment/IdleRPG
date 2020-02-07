@@ -6,52 +6,68 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 
 
-public class BaseDeDatosAllies
+public class BaseDeDatosAllies : MonoBehaviour
 {
     private static BaseDeDatosAllies instance;
-    private string nameRute = "/alliesBBDD.dat";
+    private string nameRute = "";
+    private string nameRuteOriginal = "";
     private string nameRutePlayerSave = "/progressPlayerAlly.dat";
     private string nameRuteFaseProgress = "/ProgressEtapasAndFases.dat";
     private string folderDestination = "/PlayerProgress";
     private string nameCSV = "/alliesStats.csv";
+    private string fecha = "07022020";//poner la fecha del dia q se crea la bbdd
+    private string lastFecha = "07022021";
+    private string originalPath = "alliesBBDD.dat";
+    private string originalPathEnemies = "enemiesBBDD.dat";
+    private string nameRuteEnemies = "";
+    private string nameRuteOriginalEnemies = "";
 
-    public static BaseDeDatosAllies GetInstance()
+    private void Awake()
     {
-        if (instance == null)
+        GameObject go = GameObject.Find("BaseDeDatos");
+        if (go == null || go == gameObject)
         {
             instance = new BaseDeDatosAllies();
-            if (!Directory.Exists(instance.folderDestination))
+            DontDestroyOnLoad(gameObject);
+            if (!Directory.Exists(Application.persistentDataPath + instance.folderDestination))
             {
-                Directory.CreateDirectory(instance.folderDestination);
+                Directory.CreateDirectory(Application.persistentDataPath + instance.folderDestination);
             }
+            instance.nameRute = instance.fecha + instance.originalPath;
+            instance.nameRuteOriginal = instance.fecha + instance.originalPath;
 
-            if (!File.Exists(Application.streamingAssetsPath + instance.nameRute))
+            if (!File.Exists(Application.streamingAssetsPath + "/" + instance.nameRuteOriginal))
+            {
                 instance.ReadCSV();
-            else
-            {
-                //cambiar y copiar el streaming assets a persistent path
-                instance.LoadBaseOfDates();
             }
 
-            if (!File.Exists(Application.streamingAssetsPath + instance.nameRutePlayerSave))
-            {
-                //poner datos minimos 
-                instance.SaveProgressAllies();
-            }
-            else
-                instance.LoadProgressAllies();
-
-            if (!File.Exists(Application.streamingAssetsPath + instance.nameRuteFaseProgress))
-            {
-                GameManager.GetInstance().fase = 0;
-                GameManager.GetInstance().etapa = 0;
-                instance.SaveProgressEtapaAndFase();
-            }
-            else
-                instance.LoadProgressEtapas();
+            StartCoroutine(instance.CopyPalabrasBinaryToPersistentPath());
 
         }
-        return instance;
+        else if (go != gameObject)
+            Destroy(gameObject);
+    }
+
+    private void Inicialice()
+    {
+        LoadBaseOfDates();
+
+        if (!File.Exists(Application.persistentDataPath + instance.folderDestination + instance.nameRutePlayerSave))
+        {
+            //poner datos minimos 
+            instance.SaveProgressAllies();
+        }
+        else
+            instance.LoadProgressAllies();
+
+        if (!File.Exists(Application.persistentDataPath + instance.folderDestination + instance.nameRuteFaseProgress))
+        {
+            GameManager.GetInstance().fase = 0;
+            GameManager.GetInstance().etapa = 0;
+            instance.SaveProgressEtapaAndFase();
+        }
+        else
+            instance.LoadProgressEtapas();
     }
 
     private void ReadCSV()
@@ -74,9 +90,8 @@ public class BaseDeDatosAllies
                 var valor = data.Split(',');
 
                 InfoAllies l_allie = new InfoAllies();
-                if(l_row == 1)
+                if (l_row == 1)
                 {
-                    Debug.Log(l_id);
                     l_allie.id = l_id;
                     l_allie.currentLevel = 1;
                     l_allie.name = valor[0];
@@ -117,7 +132,8 @@ public class BaseDeDatosAllies
                         l_allie.melee = true;
                     else l_allie.melee = false;
                     //añadir mas cosas*/
-                }else if(l_row >= 4 && l_row <= 203)
+                }
+                else if (l_row >= 4 && l_row <= 203)
                 {
                     if (valor[1] != "")
                     {
@@ -131,7 +147,7 @@ public class BaseDeDatosAllies
 
 
 
-                if(l_row == 202)
+                if (l_row == 202)
                 {
                     l_row = 0;
                     l_id++;
@@ -147,13 +163,66 @@ public class BaseDeDatosAllies
 
     }
 
+    private IEnumerator CopyPalabrasBinaryToPersistentPath() //en un futuro guardar por fecha y mirar si la fecha es la misma y si es diferente cambiar
+    {
+        if (!File.Exists(Application.persistentDataPath + folderDestination + "/" + nameRute))
+        {
+            //Where to copy the db to
+            string dbDestination = Application.persistentDataPath + folderDestination + "/" + nameRute;
+
+            //Check if the File do not exist then copy it
+
+            //Where the db file is at
+            string dbStreamingAsset = Application.streamingAssetsPath + "/" + nameRuteOriginal;
+
+            byte[] result;
+
+            //Read the File from streamingAssets. Use WWW for Android
+            if (dbStreamingAsset.Contains("://") || dbStreamingAsset.Contains(":///"))
+            {
+                print("contain");
+                WWW www = new WWW(dbStreamingAsset);
+                yield return www;
+                result = www.bytes;
+            }
+            else
+            {
+                result = File.ReadAllBytes(dbStreamingAsset);
+
+            }
+
+
+            //Copy the data to the persistentDataPath where the database API can freely access the file
+            File.WriteAllBytes(dbDestination, result);
+            if (File.Exists(Application.persistentDataPath + folderDestination + "/" + nameRute))
+            {
+                Debug.Log("Guardada la Base de Datos de Allies");
+
+                BinaryFormatter l_bf = new BinaryFormatter();
+                FileStream l_file = File.Create(Application.persistentDataPath + folderDestination + "/" + nameRute);
+
+                BaseOfAllies l_datos = new BaseOfAllies();
+                l_datos.infoAllies = GameManager.GetInstance().listInfoAllies;
+
+                l_bf.Serialize(l_file, l_datos);
+
+                l_file.Close();
+            }
+        }
+
+        if (File.Exists(Application.persistentDataPath + folderDestination + "/" + lastFecha + originalPath))
+            File.Delete(Application.persistentDataPath + folderDestination + "/" + lastFecha + originalPath);
+
+        Inicialice();
+    }
+
 
     private void SaveBaseOfDates()
     {
         Debug.Log("Guardada la Base de Datos de Allies");
 
         BinaryFormatter l_bf = new BinaryFormatter();
-        FileStream l_file = File.Create(Application.persistentDataPath + nameRute);
+        FileStream l_file = File.Create(Application.streamingAssetsPath + "/" + nameRuteOriginal);
 
         BaseOfAllies l_datos = new BaseOfAllies();
         l_datos.infoAllies = GameManager.GetInstance().listInfoAllies;
@@ -161,6 +230,9 @@ public class BaseDeDatosAllies
         l_bf.Serialize(l_file, l_datos);
 
         l_file.Close();
+
+        if (File.Exists(Application.streamingAssetsPath + "/" + lastFecha + originalPath))
+            File.Delete(Application.streamingAssetsPath + "/" + lastFecha + originalPath);
     }
 
     private void LoadBaseOfDates()
@@ -169,7 +241,7 @@ public class BaseDeDatosAllies
         Debug.Log("Cargada la Base de Datos de Allies");
         List<BaseOfAllies> l_allies = new List<BaseOfAllies>();
         BinaryFormatter l_bf = new BinaryFormatter();
-        FileStream l_file = File.Open(Application.persistentDataPath + nameRute, FileMode.Open);
+        FileStream l_file = File.Open(Application.persistentDataPath + folderDestination + "/" + nameRute, FileMode.Open);
 
         BaseOfAllies l_datos = (BaseOfAllies)l_bf.Deserialize(l_file);
         GameManager.GetInstance().listInfoAllies = l_datos.infoAllies;
@@ -182,7 +254,7 @@ public class BaseDeDatosAllies
         Debug.Log("Progreso Guardado");
 
         BinaryFormatter l_bf = new BinaryFormatter();
-        FileStream l_file = File.Create(Application.persistentDataPath + nameRutePlayerSave);
+        FileStream l_file = File.Create(Application.persistentDataPath + folderDestination + nameRutePlayerSave);
 
         ProgressPlayerAllies l_datos = new ProgressPlayerAllies();
         l_datos.alliesOwned = GameManager.GetInstance().alliesOwned;
@@ -199,7 +271,7 @@ public class BaseDeDatosAllies
         Debug.Log("Cargado el progreso de los aliados");
         List<BaseOfAllies> l_allies = new List<BaseOfAllies>();
         BinaryFormatter l_bf = new BinaryFormatter();
-        FileStream l_file = File.Open(Application.persistentDataPath + nameRutePlayerSave, FileMode.Open);
+        FileStream l_file = File.Open(Application.persistentDataPath + folderDestination + nameRutePlayerSave, FileMode.Open);
 
         ProgressPlayerAllies l_datos = (ProgressPlayerAllies)l_bf.Deserialize(l_file);
         GameManager.GetInstance().alliesOwned = l_datos.alliesOwned;
@@ -213,7 +285,7 @@ public class BaseDeDatosAllies
         Debug.Log("Progreso de fases y etapas Guardado");
 
         BinaryFormatter l_bf = new BinaryFormatter();
-        FileStream l_file = File.Create(Application.persistentDataPath + nameRuteFaseProgress);
+        FileStream l_file = File.Create(Application.persistentDataPath + folderDestination + nameRuteFaseProgress);
 
         ProgresPlayerEtapasAndFases l_datos = new ProgresPlayerEtapasAndFases();
         l_datos.fase = GameManager.GetInstance().fase;
@@ -230,7 +302,7 @@ public class BaseDeDatosAllies
         Debug.Log("Cargado el progreso de las etapas");
         List<BaseOfAllies> l_allies = new List<BaseOfAllies>();
         BinaryFormatter l_bf = new BinaryFormatter();
-        FileStream l_file = File.Open(Application.persistentDataPath + nameRuteFaseProgress, FileMode.Open);
+        FileStream l_file = File.Open(Application.persistentDataPath + folderDestination + nameRuteFaseProgress, FileMode.Open);
 
         ProgresPlayerEtapasAndFases l_datos = (ProgresPlayerEtapasAndFases)l_bf.Deserialize(l_file);
         GameManager.GetInstance().fase = l_datos.fase;

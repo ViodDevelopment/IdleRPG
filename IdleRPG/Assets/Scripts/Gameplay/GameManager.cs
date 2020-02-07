@@ -17,7 +17,6 @@ public class GameManager
         if(instance == null)
         {
             instance = new GameManager();
-            BaseDeDatosAllies.GetInstance();
         }
         return instance;
     }
