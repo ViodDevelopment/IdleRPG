@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Path : MonoBehaviour
+public class MyPath : MonoBehaviour
 {
     public List<Transform> listPath = new List<Transform>();
 

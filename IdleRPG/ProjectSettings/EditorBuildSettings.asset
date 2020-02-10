@@ -4,5 +4,8 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/CombatTest(Duplicado).unity
+    guid: 1e52567f3ae21ac418a7cdae3ebef23d
   m_configObjects: {}

@@ -18,11 +18,11 @@ public class EnemyController : MonoBehaviour
 
     public AllyController targetScript = null;
 
-    public GameManager gm;
+    public GameController gc;
 
     public void Initialize()
     {
-        gm = FindObjectOfType<GameManager>();
+        gc = FindObjectOfType<GameController>();
     }
 
     public void RecieveDmg(int _dmg)
@@ -33,7 +33,7 @@ public class EnemyController : MonoBehaviour
         {
             CancelInvoke();
             gameObject.SetActive(false);
-            gm.RespawnEnemies();
+            gc.RespawnEnemies();
         }
     }
     public void UpdateEnemy()
