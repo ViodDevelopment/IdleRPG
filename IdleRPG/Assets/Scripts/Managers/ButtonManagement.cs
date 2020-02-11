@@ -61,6 +61,7 @@ public class ButtonManagement : MonoBehaviour
             _ButtonChanger.SetActive(true);
     }
 
+    #region CharacterMenus
     public void ChangeCharacter(bool _Left)
     {
         if (_Left) { }
@@ -69,4 +70,24 @@ public class ButtonManagement : MonoBehaviour
         //ChangeCharacter 
     }
     
+    public void ChangeFormation()
+    {
+
+    }
+
+    public void FilterOwned()
+    {
+
+    }
+
+    public void FilterRace()
+    {
+
+    }
+
+    public void FilterRarity()
+    {
+
+    }
+    #endregion
 }
