@@ -55,7 +55,7 @@ public class ButtonManagement : MonoBehaviour
 
     public void AlternatorButton(GameObject _ButtonChanger)
     {
-        if (_ButtonChanger)
+        if (_ButtonChanger.activeSelf)
             _ButtonChanger.SetActive(false);
         else
             _ButtonChanger.SetActive(true);
@@ -68,6 +68,5 @@ public class ButtonManagement : MonoBehaviour
         else { }
         //ChangeCharacter 
     }
-
-
+    
 }
