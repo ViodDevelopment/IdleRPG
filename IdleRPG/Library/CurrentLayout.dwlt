@@ -115,7 +115,7 @@ MonoBehaviour:
   m_MinSize: {x: 917, y: 444}
   m_MaxSize: {x: 22012, y: 14044}
   vertical: 0
-  controlID: 87
+  controlID: 132
 --- !u!114 &6
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -140,7 +140,7 @@ MonoBehaviour:
   m_MinSize: {x: 436, y: 394}
   m_MaxSize: {x: 14006, y: 14044}
   vertical: 1
-  controlID: 31
+  controlID: 133
 --- !u!114 &7
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -165,7 +165,7 @@ MonoBehaviour:
   m_MinSize: {x: 436, y: 272}
   m_MaxSize: {x: 14006, y: 10022}
   vertical: 0
-  controlID: 32
+  controlID: 134
 --- !u!114 &8
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -268,7 +268,7 @@ MonoBehaviour:
   m_MinSize: {x: 204, y: 444}
   m_MaxSize: {x: 4004, y: 8044}
   vertical: 1
-  controlID: 88
+  controlID: 112
 --- !u!114 &12
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -493,19 +493,20 @@ MonoBehaviour:
     m_SceneHandles: 
     m_ShowAllHits: 0
     m_SearchArea: 1
-    m_Folders: []
+    m_Folders:
+    - Assets/Prefabs
   m_ViewMode: 0
   m_StartGridSize: 64
   m_LastFolders: []
   m_LastFoldersGridSize: -1
-  m_LastProjectPath: D:\ToyToyGameGit\NuevoToyToy\IdleRPG\IdleRPG
+  m_LastProjectPath: D:\vic\IdleRPG\IdleRPG
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 42110000
     m_LastClickedID: 4418
-    m_ExpandedIDs: 000000004a3000002c31000042320000dc330000023400002e340000
+    m_ExpandedIDs: 00000000ec340000d2350000b6360000f03600005638000098380000c0380000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -533,7 +534,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: ffffffff000000004a3000002c31000042320000dc330000023400006038000066380000
+    m_ExpandedIDs: ffffffff00000000ec340000d2350000b6360000f03600005638000098380000c0380000523d0000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -617,9 +618,9 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: 2edfffff
-      m_LastClickedID: -8402
-      m_ExpandedIDs: 98f8ffff
+      m_SelectedIDs: 383d0000
+      m_LastClickedID: 0
+      m_ExpandedIDs: caf8ffff
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -738,11 +739,11 @@ MonoBehaviour:
   m_Rotation:
     m_Target: {x: 0.20902872, y: -0.40940145, z: 0.097031236, w: 0.88281345}
     speed: 2
-    m_Value: {x: 0.20887488, y: -0.41070935, z: 0.097340904, w: 0.8821643}
+    m_Value: {x: -0.20902872, y: 0.40940145, z: -0.09703123, w: -0.88281345}
   m_Size:
     m_Target: 5.7925153
     speed: 2
-    m_Value: 5.492515
+    m_Value: 5.7925153
   m_Ortho:
     m_Target: 0
     speed: 2
