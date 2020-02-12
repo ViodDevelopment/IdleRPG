@@ -55,9 +55,10 @@ public class AllyController : AllyPrimitive
 
     #endregion
 
-    public void Initialize()
+    public virtual void Initialize()
     {
         specialAbilities = new SpecialAbility[numOfAb];
+       // specialAbilities[0] = new PielFerrea("PielFerrea", 2, 12, 3);
         
     }
 
