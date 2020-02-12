@@ -53,18 +53,7 @@ public class RyuugaoAbilities : AllyController
     public void Ability3()
     {
 
-        foreach (var item in listOfEnemies)
-        {
-
-
-            float l_angle = Vector3.Angle(item.transform.position - Punto0, transform.forward);
-            if (l_angle <= maxAngle)
-            {
-
-                if ((item.transform.position - Punto0).magnitude <= maxDistance)
-                    print("le da a " + item);
-            }
-        }
+      
     }
     public void Ability4()
     {
@@ -81,9 +70,41 @@ public class RyuugaoAbilities : AllyController
 
 public class RugidoDragon: SpecialAbility
 {
-    public RugidoDragon(string _name, float _cooldown, int _dmg, int _energy) : base(_name, _cooldown, _dmg, _energy)
-    {
+    public List<EnemyController> listOfEnemies;
+    public float maxAngle;
+    public float maxDistance;
 
+    public RugidoDragon(string _name, float _cooldown, int _dmg, int _energy, List<EnemyController> _listOfEnemies, float _maxAngle, float _maxDistance) : base(_name, _cooldown, _dmg, _energy)
+    {
+        listOfEnemies = _listOfEnemies;
+        maxAngle = _maxAngle;
+        maxDistance = _maxDistance;
+    }
+    public override void UseAb()
+    {
+        EnemyController _enemigo = null;
+        foreach (var item in listOfEnemies)
+        {
+
+
+            float l_angle = Vector3.Angle(item.transform.position - gameObject.transform.position, transform.forward);
+            if (l_angle <= maxAngle)
+            {
+
+                if ((item.transform.position - gameObject.transform.position).magnitude <= maxDistance)
+                {
+                    
+                    _enemigo = item;
+                    if (_enemigo != null)
+                    {
+                        _enemigo.RecieveDmg(dmg);
+                        print("le da a " + item);
+                    }
+                    
+                }
+                    
+            }
+        }
     }
 }
 
@@ -130,4 +151,34 @@ public class GolpeNaginata : SpecialAbility
         
     }
     
+}
+
+
+public class Temple : SpecialAbility
+{
+    public List<AllyController> listOfAllies;
+
+    public Temple(string _name, float _cooldown, int _dmg, int _energy, List<AllyController> _listOfAllies ) : base(_name, _cooldown, _dmg, _energy)
+    {
+        listOfAllies = _listOfAllies;
+    }
+
+    public override void UseAb()
+    {
+        int l_numMaxAllies = listOfAllies.Count;
+        if (listOfAllies.Count< l_numMaxAllies)
+        {
+            l_numMaxAllies--;
+            //def
+        }
+        /*
+          int MaxAliados = contadorAliados;
+
+        if (contadorAliados < MaxAliados)
+        {
+            MaxAliados--;
+            def += def * 0.05f;
+        }
+         */
+    }
 }
