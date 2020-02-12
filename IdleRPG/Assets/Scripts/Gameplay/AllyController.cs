@@ -58,6 +58,7 @@ public class AllyController : AllyPrimitive
     public void Initialize()
     {
         specialAbilities = new SpecialAbility[numOfAb];
+        
     }
 
     public void UpdateAlly()
