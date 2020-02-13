@@ -28,44 +28,12 @@ public class RyuugaoAbilities : AllyController
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
-        {
-            //Ability1();
-        }
+        
     }
 
 
 
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.red;
-        Gizmos.color = Color.blue;
-    }
-
-
-    public void Ability2()
-    {
-
-        def += def * 0.1f;
-        // aumenta un 10% su armadura por sus escamas de dragon
-
-    }
-    public void Ability3()
-    {
-
-      
-    }
-    public void Ability4()
-    {
-        int MaxAliados = contadorAliados;
-
-        if (contadorAliados < MaxAliados)
-        {
-            MaxAliados--;
-            def += def * 0.05f;
-        }
-        //cada vez que un aliado muere.
-    }
+    
 }
 
 public class RugidoDragon: SpecialAbility
@@ -157,28 +125,43 @@ public class GolpeNaginata : SpecialAbility
 public class Temple : SpecialAbility
 {
     public List<AllyController> listOfAllies;
-
-    public Temple(string _name, float _cooldown, int _dmg, int _energy, List<AllyController> _listOfAllies ) : base(_name, _cooldown, _dmg, _energy)
+    public float def; 
+    public Temple(string _name, float _cooldown, int _dmg, int _energy, List<AllyController> _listOfAllies, float _def ) : base(_name, _cooldown, _dmg, _energy)
     {
         listOfAllies = _listOfAllies;
+        def = _def;
     }
 
     public override void UseAb()
     {
-        int l_numMaxAllies = listOfAllies.Count;
-        if (listOfAllies.Count< l_numMaxAllies)
+        int l_numMaxAllies = 4;
+        int l_numActAllies = listOfAllies.Count;
+        int Contador = 0;
+
+        if(listOfAllies.Count == 4)
+        {
+            Contador = 0;
+        }
+        if (listOfAllies.Count< l_numActAllies)
         {
             l_numMaxAllies--;
-            //def
+            Contador++;
         }
-        /*
-          int MaxAliados = contadorAliados;
 
-        if (contadorAliados < MaxAliados)
-        {
-            MaxAliados--;
-            def += def * 0.05f;
-        }
-         */
+        // def= def + (def *0.05 *Contador)  necesito la defensa del jugador no existe en ally controlles
+      
+    }
+}
+
+public class EscamasDragon : SpecialAbility
+{
+    public float def;
+    public EscamasDragon(string _name, float _cooldown, int _dmg, int _energy, float _def) : base(_name, _cooldown, _dmg, _energy)
+    {
+        def = _def;
+    }
+    public override void UseAb()
+    {
+        def += def * 0.1f;
     }
 }
