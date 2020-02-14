@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.450881, g: 0.4991626, b: 0.565895, a: 1}
+  m_IndirectSpecularColor: {r: 0.44954175, g: 0.4996149, b: 0.5756744, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -422,7 +422,7 @@ Light:
   m_Lightmapping: 4
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
-  m_BounceIntensity: 47.44
+  m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
   m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
@@ -436,13 +436,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 895156018}
-  m_LocalRotation: {x: 0.17005558, y: -0.23326114, z: 0.17486337, w: 0.94132525}
+  m_LocalRotation: {x: 0.43711907, y: 0.14951468, z: 0.2814383, w: 0.8410498}
   m_LocalPosition: {x: 3.32, y: 2.4, z: -4.12}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 5
-  m_LocalEulerAnglesHint: {x: 23.687, y: -24.494001, z: 15.834001}
+  m_LocalEulerAnglesHint: {x: 40.626003, y: 40.961002, z: 52.747}
 --- !u!1001 &1149242813
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -730,7 +730,7 @@ PrefabInstance:
     - target: {fileID: -4216859302048453862, guid: 7d3a9b75492377b4da62f7bf0cd68f83,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 6.43
+      value: 9.42
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 7d3a9b75492377b4da62f7bf0cd68f83,
         type: 3}
@@ -799,6 +799,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -1504981713932161579, guid: 7d3a9b75492377b4da62f7bf0cd68f83,
         type: 3}
+      propertyPath: m_Materials.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: -1504981713932161579, guid: 7d3a9b75492377b4da62f7bf0cd68f83,
+        type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: b9157e4726d3b014da7aa5bf10908e06, type: 2}
@@ -807,6 +812,11 @@ PrefabInstance:
       propertyPath: m_DynamicOccludee
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -1504981713932161579, guid: 7d3a9b75492377b4da62f7bf0cd68f83,
+        type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 2100000, guid: df7ee8247546e994c91d1e6186314060, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7d3a9b75492377b4da62f7bf0cd68f83, type: 3}
 --- !u!1 &2010228003
