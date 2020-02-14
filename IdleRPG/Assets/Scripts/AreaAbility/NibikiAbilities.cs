@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NibikiAbilities : MonoBehaviour , Abilities
+public class NibikiAbilities : MonoBehaviour 
 {
     public List<GameObject> listOfEnemies = new List<GameObject>(); // sustituirlo por la lista de enemigos
     public List<GameObject> listOfAllies = new List<GameObject>();
@@ -21,42 +21,109 @@ public class NibikiAbilities : MonoBehaviour , Abilities
     {
         
     }
-    public void Ability1()
-    {
-       // a todos los enemigos les reduce su velocidad de ataque y de mov 
-    }
+    
 
-    public void Ability2()
-    {
-        // si muere un aliado dura unos segundos mas
-    }
+}
+public class AlteracionTemporal : SpecialAbility
+{
+    public List<EnemyController> listOfEnemies;
 
-    public void Ability3()
+    public AlteracionTemporal(string _name, float _cooldown, int _dmg, int _energy, List<EnemyController> _listOfEnemies) : base(_name, _cooldown, _dmg, _energy)
     {
-        // sana al aliado con menos vida
-        float l_vidaMax = 1000f; // vida maxima global
-        GameObject _Allie = null;
+        listOfEnemies = _listOfEnemies;
+    }
+    public override void UseAb()
+    {
+        EnemyController _enemigo = null;
         foreach (var item in listOfEnemies)
         {
-            float vida =0/*= item.GetComponent<>()*/; // coger vida de la lista aliados
+            //item.atackVel
+            //item.movVel
+        }
+    }
+}
+
+public class UltimoAliento : SpecialAbility
+{
+    public List<AllyController> listOfAllies;
+    public float timer; 
+    public UltimoAliento(string _name, float _cooldown, int _dmg, int _energy,  List<AllyController> _listOfAllies, float _timer ) : base(_name, _cooldown, _dmg, _energy)
+    {
+        listOfAllies = _listOfAllies;
+        timer = _timer;
+    }
+    public override void UseAb()
+    {
+        
+        foreach (var item in listOfAllies)
+        {
+            if(item.currentHP <= 0)
+            {
+                
+                for (float Timer= timer;  Timer >= 0f; Timer-= Time.deltaTime )
+                {
+                    if (Timer <= 0)
+                    {
+                        item.CancelInvoke();
+                        item.currentState = AllyPrimitive.StatesAlly.DEAD;
+                    }
+
+                }
+            }
+        }
+    }
+
+}
+
+public class RecuperarAlma : SpecialAbility
+{
+    public List<AllyController> listOfAllies;
+    public int vidaCurar;
+
+    public RecuperarAlma(string _name, float _cooldown, int _dmg, int _energy, List<AllyController> _listOfAllies, int _vidaCurar) : base(_name, _cooldown, _dmg, _energy)
+    {
+        listOfAllies = _listOfAllies;
+        vidaCurar = _vidaCurar;
+    }
+    public override void UseAb()
+    {
+        AllyController _aliado = null;
+        float l_vidaMax = 1000f;
+
+        foreach (var item in listOfAllies)
+        {
+            float vida = item.currentHP; // coger vida de la lista aliados
             if (vida < l_vidaMax)
             {
                 l_vidaMax = vida;
-               _Allie = item;
+                _aliado = item;
             }
         }
-        if (_Allie!= null)
+        if (_aliado != null)
         {
-            // sumar vida al GameObject
-            print("Le curo vida a "+_Allie); 
+            _aliado.RecieveDmg( -vidaCurar);
         }
-
     }
 
-    public void Ability4()
+
+}
+
+public class CosechaAlmas : SpecialAbility
+{
+    float timer;
+    public CosechaAlmas(string _name, float _cooldown, int _dmg, int _energy, int _timer) : base(_name, _cooldown, _dmg, _energy)
     {
-       // levanta a dos muertos para que luchen pero solo durante unos pocos segundos
+        timer = _timer;
+    }
+    public override void UseAb()
+    {
+        for (float Timer = timer; Timer >= 0f; Timer -= Time.deltaTime)
+        {
+            if (Timer <= 0)
+            {
+                //destruccion de los muertos
+            }
 
-
+        }
     }
 }
