@@ -27,17 +27,20 @@ public class NibikiAbilities : MonoBehaviour
 public class AlteracionTemporal : SpecialAbility
 {
     public List<EnemyController> listOfEnemies;
+    public float  reduc; // tanto por ciento de reduccion 
 
-    public AlteracionTemporal(string _name, float _cooldown, int _dmg, int _energy, List<EnemyController> _listOfEnemies) : base(_name, _cooldown, _dmg, _energy)
+    public AlteracionTemporal(string _name, float _cooldown, int _dmg, int _energy, List<EnemyController> _listOfEnemies, float _reduc) : base(_name, _cooldown, _dmg, _energy)
     {
         listOfEnemies = _listOfEnemies;
+        reduc = _reduc;
     }
     public override void UseAb()
     {
-        EnemyController _enemigo = null;
+        //EnemyController _enemigo = null;
         foreach (var item in listOfEnemies)
         {
-            //item.atackVel
+            item.basicAttackCooldown -= item.basicAttackCooldown*reduc; // reduccion velocidad de ataque
+        
             //item.movVel
         }
     }
@@ -110,17 +113,28 @@ public class RecuperarAlma : SpecialAbility
 
 public class CosechaAlmas : SpecialAbility
 {
-    float timer;
-    public CosechaAlmas(string _name, float _cooldown, int _dmg, int _energy, int _timer) : base(_name, _cooldown, _dmg, _energy)
+    public float timer;
+    public GameObject NoMuerto;
+    
+    public CosechaAlmas(string _name, float _cooldown, int _dmg, int _energy, int _timer, GameObject _NoMuerto) : base(_name, _cooldown, _dmg, _energy)
     {
         timer = _timer;
+        NoMuerto = _NoMuerto;
     }
     public override void UseAb()
     {
+        GameObject l_noMuerto1;
+        GameObject l_noMuerto2;
+
+        l_noMuerto1 = Instantiate(NoMuerto, new Vector3 (transform.position.x + 3, transform.position.y, transform.position.z-2), transform.rotation);
+        l_noMuerto2 = Instantiate(NoMuerto, new Vector3(transform.position.x + 3, transform.position.y, transform.position.z + 2), transform.rotation);
+
         for (float Timer = timer; Timer >= 0f; Timer -= Time.deltaTime)
         {
             if (Timer <= 0)
             {
+                Destroy(l_noMuerto1);
+                Destroy(l_noMuerto2);
                 //destruccion de los muertos
             }
 

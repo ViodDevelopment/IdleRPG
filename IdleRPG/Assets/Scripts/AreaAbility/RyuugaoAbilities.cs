@@ -125,11 +125,11 @@ public class GolpeNaginata : SpecialAbility
 public class Temple : SpecialAbility
 {
     public List<AllyController> listOfAllies;
-    public float def; 
-    public Temple(string _name, float _cooldown, int _dmg, int _energy, List<AllyController> _listOfAllies, float _def ) : base(_name, _cooldown, _dmg, _energy)
+    RyuugaoAbilities ally;
+    public Temple(string _name, float _cooldown, int _dmg, int _energy, List<AllyController> _listOfAllies, RyuugaoAbilities _ally) : base(_name, _cooldown, _dmg, _energy)
     {
         listOfAllies = _listOfAllies;
-        def = _def;
+        ally = _ally;
     }
 
     public override void UseAb()
@@ -147,21 +147,26 @@ public class Temple : SpecialAbility
             l_numMaxAllies--;
             Contador++;
         }
-
-        // def= def + (def *0.05 *Contador)  necesito la defensa del jugador no existe en ally controlles
+        float l_cambioInt = ally.maxDef * 0.05f * Contador;
+        ally.currentDef += (int)l_cambioInt; 
+        
       
     }
 }
 
 public class EscamasDragon : SpecialAbility
 {
-    public float def;
-    public EscamasDragon(string _name, float _cooldown, int _dmg, int _energy, float _def) : base(_name, _cooldown, _dmg, _energy)
+  
+    RyuugaoAbilities ally;
+    public EscamasDragon(string _name, float _cooldown, int _dmg, int _energy,  RyuugaoAbilities _ally) : base(_name, _cooldown, _dmg, _energy)
     {
-        def = _def;
+        ally = _ally;
     }
     public override void UseAb()
     {
-        def += def * 0.1f;
+        float l_cambioInt = ally.maxDef * 0.1f;
+
+        ally.currentDef +=  (int) l_cambioInt;
+        
     }
 }
