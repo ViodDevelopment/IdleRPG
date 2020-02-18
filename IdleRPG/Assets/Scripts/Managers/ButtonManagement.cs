@@ -7,12 +7,27 @@ using UnityEngine.SceneManagement;
 public class ButtonManagement : MonoBehaviour
 {
     [HideInInspector] public bool musicActive = true;
-    public GameObject[] CanvasList;
+    public GameObject[] canvasList;
 
     [Header("Sprites")]
     public Sprite buttonActive;
     public Sprite buttonDesactive;
 
+    public GameObject prefabCharacterListImage;
+    public GameObject contentScroll;
+    public GameObject contentScrollEvolution;
+    public GameObject contentSize;
+    public GameObject contentSizeEvolution;
+
+   
+
+
+    private void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.K))
+        GenerateCharacterList();
+      
+    }
 
     #region Social Media Links
     public void TwitterAccess()
@@ -45,9 +60,9 @@ public class ButtonManagement : MonoBehaviour
 
     public void ActivateOneCanvasDeselectTheRest(GameObject _CanvasToActivate)
     {
-        for (int i = 0; i < CanvasList.Length; i++)
+        for (int i = 0; i < canvasList.Length; i++)
         {
-            CanvasList[i].SetActive(false);
+            canvasList[i].SetActive(false);
         }
 
         _CanvasToActivate.SetActive(true);
@@ -90,4 +105,50 @@ public class ButtonManagement : MonoBehaviour
 
     }
     #endregion
+
+    public void GenerateCharacterList()
+    {
+        int l_Columns = 4;
+        int l_Rows = 4/*numchar /4 */;
+        int l_Size = 250;
+        int l_Dist = 25;
+        
+        for (int i = 0; i < l_Rows; i++)
+        {
+            for (int j = 0; j < l_Columns; j++)
+            {
+                GameObject l_Prefab = Instantiate(prefabCharacterListImage);
+                l_Prefab.transform.SetParent(contentScroll.transform);
+                l_Prefab.GetComponent<RectTransform>().localPosition = new Vector3( l_Size * j + 10 * j,-( l_Dist* i + l_Size*i),0.1f);
+                l_Prefab.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
+                contentSize.GetComponent<RectTransform>().sizeDelta =new Vector2(0, l_Rows * l_Size * 1.25f); 
+            }
+        }
+    }
+
+    public void GenerateCharacterListEvolution()
+    {
+        int l_Columns = 4;
+        int l_Rows = 4/*numchar /4 */;
+        int l_Size = 250;
+        int l_Dist = 25;
+        
+        for (int i = 0; i < l_Rows; i++)
+        {
+            for (int j = 0; j < l_Columns; j++)
+            {
+                GameObject l_Prefab = Instantiate(prefabCharacterListImage);
+                l_Prefab.transform.SetParent(contentScrollEvolution.transform);
+                l_Prefab.GetComponent<RectTransform>().localPosition = new Vector3( l_Size * j + 10 * j,-( l_Dist* i + l_Size*i),0.1f);
+                l_Prefab.GetComponent<RectTransform>().localScale = new Vector3( 1,1,1);
+                contentSizeEvolution.GetComponent<RectTransform>().sizeDelta =new Vector2(0, l_Rows * l_Size * 1.25f); 
+            }
+        }
+    }
+
+    public void SelectedChar( GameObject _SelectedChar)
+    {
+
+    }
+   
 }
