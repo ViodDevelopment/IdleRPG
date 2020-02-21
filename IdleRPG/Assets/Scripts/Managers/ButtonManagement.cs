@@ -19,13 +19,12 @@ public class ButtonManagement : MonoBehaviour
     public GameObject contentSize;
     public GameObject contentSizeEvolution;
 
-   
+
 
 
     private void Update()
     {
-        if(Input.GetKeyDown(KeyCode.K))
-        GenerateCharacterList();
+       
       
     }
 
@@ -150,5 +149,19 @@ public class ButtonManagement : MonoBehaviour
     {
 
     }
-   
+
+    public void MoveIcon(GameObject _panelToMove)
+    {
+        if (_panelToMove.activeSelf == false)
+        {
+           // iconToMove.transform.position = newPosition.position;
+            _panelToMove.SetActive(true);
+        }
+        else
+        {
+           // iconToMove.transform.position = firstPosition.position;
+            _panelToMove.SetActive(false);
+        }
+    }
+
 }
