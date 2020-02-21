@@ -5,7 +5,10 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/CombatTest(Duplicado).unity
     guid: 1e52567f3ae21ac418a7cdae3ebef23d
+  - enabled: 1
+    path: Assets/Scenes/Prueba Time Idle/TimeIdle.unity
+    guid: 33d167548e0143a43aa54a497b8d7b05
   m_configObjects: {}
