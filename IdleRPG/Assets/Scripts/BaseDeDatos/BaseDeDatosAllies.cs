@@ -43,7 +43,18 @@ public class BaseDeDatosAllies : MonoBehaviour
                 instance.ReadCSV();
             }
 
-            instance.StartCoroutine(instance.CopyPalabrasBinaryToPersistentPath());
+            if (!File.Exists(Application.persistentDataPath + folderDestination + "/" + nameRute))
+            {
+                instance.StartCoroutine(instance.CopyPalabrasBinaryToPersistentPath());
+            }
+            else
+            {
+
+                if (File.Exists(Application.persistentDataPath + folderDestination + "/" + lastFecha + originalPath))
+                    File.Delete(Application.persistentDataPath + folderDestination + "/" + lastFecha + originalPath);
+
+                Inicialice();
+            }
 
         }
         else if (go != gameObject)
@@ -167,44 +178,43 @@ public class BaseDeDatosAllies : MonoBehaviour
 
     private IEnumerator CopyPalabrasBinaryToPersistentPath() //en un futuro guardar por fecha y mirar si la fecha es la misma y si es diferente cambiar
     {
-        if (!File.Exists(Application.persistentDataPath + folderDestination + "/" + nameRute))
+
+        //Where to copy the db to
+        string dbDestination = Application.persistentDataPath + folderDestination + "/" + nameRute;
+
+        //Check if the File do not exist then copy it
+
+        //Where the db file is at
+        string dbStreamingAsset = Application.streamingAssetsPath + "/" + nameRuteOriginal;
+
+        byte[] result;
+
+        //Read the File from streamingAssets. Use WWW for Android
+        if (dbStreamingAsset.Contains("://") || dbStreamingAsset.Contains(":///"))
         {
-            //Where to copy the db to
-            string dbDestination = Application.persistentDataPath + folderDestination + "/" + nameRute;
-
-            //Check if the File do not exist then copy it
-
-            //Where the db file is at
-            string dbStreamingAsset = Application.streamingAssetsPath + "/" + nameRuteOriginal;
-
-            byte[] result;
-
-            //Read the File from streamingAssets. Use WWW for Android
-            if (dbStreamingAsset.Contains("://") || dbStreamingAsset.Contains(":///"))
-            {
-                WWW www = new WWW(dbStreamingAsset);
-                yield return www;
-                result = www.bytes;
-            }
-            else
-            {
-                result = File.ReadAllBytes(dbStreamingAsset);
-            }
-
-            //Create Directory if it does not exist
-            if (!Directory.Exists(Path.GetDirectoryName(dbDestination)))
-            {
-                Directory.CreateDirectory(Path.GetDirectoryName(dbDestination));
-            }
-
-            //Copy the data to the persistentDataPath where the database API can freely access the file
-            File.WriteAllBytes(dbDestination, result);
+            WWW www = new WWW(dbStreamingAsset);
+            yield return www;
+            result = www.bytes;
         }
+        else
+        {
+            result = File.ReadAllBytes(dbStreamingAsset);
+        }
+
+        //Create Directory if it does not exist
+        if (!Directory.Exists(Path.GetDirectoryName(dbDestination)))
+        {
+            Directory.CreateDirectory(Path.GetDirectoryName(dbDestination));
+        }
+
+        //Copy the data to the persistentDataPath where the database API can freely access the file
+        File.WriteAllBytes(dbDestination, result);
 
         if (File.Exists(Application.persistentDataPath + folderDestination + "/" + lastFecha + originalPath))
             File.Delete(Application.persistentDataPath + folderDestination + "/" + lastFecha + originalPath);
 
         Inicialice();
+
     }
 
 
