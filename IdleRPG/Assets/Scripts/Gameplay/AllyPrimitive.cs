@@ -12,6 +12,7 @@ public class AllyPrimitive : MonoBehaviour
     public int maxHP;
     public int currentAtack;
     public int currentDef;
+    public int maxDef;
     public int currentLevel;
     public int expNextLvl;
     public float currentAtackSpeed;

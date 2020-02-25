@@ -8,7 +8,7 @@ public class EnemyController : MonoBehaviour
 
     public float range;
 
-    public float basicAttackCooldown;
+    public float basicAttackCooldown; //velocidad de ataque
 
     public bool isAttacking = false;
 

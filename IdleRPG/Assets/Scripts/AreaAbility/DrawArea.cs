@@ -4,10 +4,15 @@ using UnityEngine;
 
 public class DrawArea : MonoBehaviour
 {
+   // public int NumeroDeVectores;
+    //public Vector3[] Vectores = new Vector3[NumeroDeVectores]; //[] objects = new GameObject[SIZE];
+    //public List<Vector3> Vectores = new List<Vector3>();
     // Start is called before the first frame update
     void Start()
     {
-        
+       /* GameObject o =  new GameObject();
+        o.GetComponent<Abilities>().Ability1();
+    */
     }
 
     // Update is called once per frame
