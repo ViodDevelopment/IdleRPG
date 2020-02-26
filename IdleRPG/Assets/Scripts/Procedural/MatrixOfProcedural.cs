@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 
@@ -14,6 +13,7 @@ public class MatrixOfProcedural : MonoBehaviour
     private static string nameMesh;
     private int[] sizeMesh = new int[2];
     public int precisionOfMatrix = 0;
+    public Mesh mesh;
 
     private void Awake()
     {
@@ -171,7 +171,10 @@ public class MatrixOfProcedural : MonoBehaviour
         l_x = Mathf.RoundToInt(l_localPos.x);
         l_z = Mathf.RoundToInt(l_localPos.z);
         if (l_x >= 0 && l_x < matrixVertexProcedural.Count && l_z >= 0 && l_z < matrixVertexProcedural[0].Count)
+        {
+            matrixVertexProcedural[l_x][l_z].ResetPoint();
             matrixVertexProcedural[l_x][l_z].currentTypeVertex = VertexProcedural.typeOfVertex.PATH;
+        }
 
         float l_incrementAngles = 5f / (_radiusPath + _radiusEnvironment);
         float currentAngles = 0;
@@ -193,7 +196,10 @@ public class MatrixOfProcedural : MonoBehaviour
             for (int i = item.x; i != l_x; i += multiplierX)
             {
                 if (i < matrixVertexProcedural.Count && item.y < matrixVertexProcedural[0].Count && i >= 0 && item.y >= 0)
+                {
+                    matrixVertexProcedural[i][item.y].ResetPoint();
                     matrixVertexProcedural[i][item.y].currentTypeVertex = VertexProcedural.typeOfVertex.PATH;
+                }
             }
 
             if (item.x == l_x)
@@ -204,7 +210,10 @@ public class MatrixOfProcedural : MonoBehaviour
                 for (int i = item.y; i != l_z; i += multiplierZ)
                 {
                     if (item.x < matrixVertexProcedural.Count && i < matrixVertexProcedural[0].Count && item.x >= 0 && i >= 0)
+                    {
+                        matrixVertexProcedural[item.x][i].ResetPoint();
                         matrixVertexProcedural[item.x][i].currentTypeVertex = VertexProcedural.typeOfVertex.PATH;
+                    }
                 }
             }
 
@@ -233,6 +242,7 @@ public class MatrixOfProcedural : MonoBehaviour
                     else if (matrixVertexProcedural[i][item.y].currentTypeVertex != VertexProcedural.typeOfVertex.ENVIRONMENT)
                     {
                         matrixVertexProcedural[i][item.y].currentTypeVertex = VertexProcedural.typeOfVertex.ENVIRONMENT;
+                        SearchOcupated(i, item.y);
                     }
                 }
             }
@@ -249,7 +259,10 @@ public class MatrixOfProcedural : MonoBehaviour
                         if (matrixVertexProcedural[item.x][i].currentTypeVertex == VertexProcedural.typeOfVertex.PATH)
                             break;
                         else if (matrixVertexProcedural[item.x][i].currentTypeVertex != VertexProcedural.typeOfVertex.ENVIRONMENT)
+                        {
                             matrixVertexProcedural[item.x][i].currentTypeVertex = VertexProcedural.typeOfVertex.ENVIRONMENT;
+                            SearchOcupated(item.x, i);
+                        }
                     }
                 }
             }
@@ -323,6 +336,7 @@ public class MatrixOfProcedural : MonoBehaviour
         if (matrixVertexProcedural[l_x][l_z].currentTypeVertex != VertexProcedural.typeOfVertex.PATH)
         {
             matrixVertexProcedural[l_x][l_z].currentTypeVertex = VertexProcedural.typeOfVertex.ENVIRONMENT;
+            SearchOcupated(l_x, l_z);
         }
 
         float l_incrementAngles = 5f / (_radiusEnvironment);
@@ -347,7 +361,11 @@ public class MatrixOfProcedural : MonoBehaviour
                 if (i < matrixVertexProcedural.Count && item.y < matrixVertexProcedural[0].Count && i >= 0 && item.y >= 0)
                 {
                     if (matrixVertexProcedural[i][item.y].currentTypeVertex != VertexProcedural.typeOfVertex.PATH)
+                    {
                         matrixVertexProcedural[i][item.y].currentTypeVertex = VertexProcedural.typeOfVertex.ENVIRONMENT;
+                        SearchOcupated(i, item.y);
+
+                    }
                 }
             }
 
@@ -361,7 +379,10 @@ public class MatrixOfProcedural : MonoBehaviour
                     if (item.x < matrixVertexProcedural.Count && i < matrixVertexProcedural[0].Count && item.x >= 0 && i >= 0)
                     {
                         if (matrixVertexProcedural[item.x][i].currentTypeVertex != VertexProcedural.typeOfVertex.PATH)
+                        {
                             matrixVertexProcedural[item.x][i].currentTypeVertex = VertexProcedural.typeOfVertex.ENVIRONMENT;
+                            SearchOcupated(item.x, i);
+                        }
                     }
                 }
             }
@@ -498,6 +519,74 @@ public class MatrixOfProcedural : MonoBehaviour
         //UnityEditor.EditorApplication.SaveScene();
     }
 
+    private bool SearchOcupated(int _x, int _z)
+    {
+        if (!matrixVertexProcedural[_x][_z].ocupated && matrixVertexProcedural[_x][_z].currentTypeVertex == VertexProcedural.typeOfVertex.ENVIRONMENT)
+        {
+            GameObject _go = new GameObject();
+            _go.AddComponent<MeshFilter>().mesh = mesh;
+            _go.AddComponent<MeshRenderer>();
+            _go.name = matrixVertexProcedural[_x][_z].positionsInFloats[0] + " " + matrixVertexProcedural[_x][_z].positionsInFloats[1] + " " + matrixVertexProcedural[_x][_z].positionsInFloats[2];
+            matrixVertexProcedural[_x][_z].nameGO = _go.name;
+            _go.transform.position = new Vector3(matrixVertexProcedural[_x][_z].positionsInFloats[0], matrixVertexProcedural[_x][_z].positionsInFloats[1], matrixVertexProcedural[_x][_z].positionsInFloats[2]);
+            matrixVertexProcedural[_x][_z].ocupated = true;
+            matrixVertexProcedural[_x][_z].myGameObject = true;
+            _go.transform.rotation = Quaternion.LookRotation(new Vector3(Random.Range(-5,5), 0, Random.Range(-5,5)),Vector3.up);
+            //dependiendo de lo grande y la densidad cambiar el 4
+            float l_radius = mesh.bounds.max.magnitude * matrixVertexProcedural[_x][_z].density + 3.5f;
+            float l_incrementAngles = 5f / (l_radius);
+            float currentAngles = 0;
+            List<Vector2Int> l_positions = new List<Vector2Int>();
+            int l_xPos = 0;
+            int l_zPos = 0;
+            for (int i = 0; currentAngles < 360; currentAngles += l_incrementAngles)
+            {
+                l_xPos = Mathf.RoundToInt(Mathf.Cos(currentAngles) * l_radius) + _x;
+                l_zPos = Mathf.RoundToInt(Mathf.Sin(currentAngles) * l_radius) + _z;
+                l_positions.Add(new Vector2Int(l_xPos, l_zPos));
+            }
+
+            foreach (var item in l_positions)
+            {
+                int multiplierX = 1;
+                if (item.x - _x > 0)
+                    multiplierX = -1;
+                for (int i = item.x; i != _x; i += multiplierX)
+                {
+                    if (i < matrixVertexProcedural.Count && item.y < matrixVertexProcedural[0].Count && i >= 0 && item.y >= 0)
+                    {
+                        matrixVertexProcedural[i][item.y].ocupated = true;
+                        matrixVertexProcedural[i][item.y].parentOcupated = matrixVertexProcedural[_x][_z];
+                        matrixVertexProcedural[_x][_z].myVertexsX.Add(i);
+                        matrixVertexProcedural[_x][_z].myVertexsZ.Add(item.y);
+
+                    }
+                }
+
+                if (item.x == _x)
+                {
+                    int multiplierZ = 1;
+                    if (item.y - _z > 0)
+                        multiplierZ = -1;
+                    for (int i = item.y; i != _z; i += multiplierZ)
+                    {
+                        if (item.x < matrixVertexProcedural.Count && i < matrixVertexProcedural[0].Count && item.x >= 0 && i >= 0)
+                        {
+                            matrixVertexProcedural[item.x][i].ocupated = true;
+                            matrixVertexProcedural[item.x][i].parentOcupated = matrixVertexProcedural[_x][_z];
+                            matrixVertexProcedural[_x][_z].myVertexsX.Add(item.x);
+                            matrixVertexProcedural[_x][_z].myVertexsZ.Add(i);
+                        }
+                    }
+                }
+
+            }
+            return false;
+        }
+        return true;
+    }
+
+
     private void OnDrawGizmos()
     {
         for (int i = 0; i < matrixVertexProcedural.Count; i++)
@@ -518,6 +607,12 @@ public class MatrixOfProcedural : MonoBehaviour
                 else if (matrixVertexProcedural[i][j].currentTypeVertex == VertexProcedural.typeOfVertex.PATH)
                 {
                     Gizmos.color = Color.blue;
+                    Gizmos.DrawCube(new Vector3(matrixVertexProcedural[i][j].positionsInFloats[0], matrixVertexProcedural[i][j].positionsInFloats[1], matrixVertexProcedural[i][j].positionsInFloats[2]) + gameObject.transform.position, Vector3.one / 5);
+                }
+
+                if (matrixVertexProcedural[i][j].ocupated)
+                {
+                    Gizmos.color = Color.gray;
                     Gizmos.DrawCube(new Vector3(matrixVertexProcedural[i][j].positionsInFloats[0], matrixVertexProcedural[i][j].positionsInFloats[1], matrixVertexProcedural[i][j].positionsInFloats[2]) + gameObject.transform.position, Vector3.one / 5);
                 }
             }

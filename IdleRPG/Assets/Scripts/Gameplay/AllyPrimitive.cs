@@ -10,12 +10,14 @@ public class AllyPrimitive : MonoBehaviour
     private InfoAllies myInfoAlly;
     public int currentHP;
     public int maxHP;
-    public int currentAtack;
+    public int currentAttack;
+    public int maxAttack;
     public int currentDef;
     public int maxDef;
     public int currentLevel;
     public int expNextLvl;
-    public float currentAtackSpeed;
+    public float currentAttackSpeed;
+    public float maxAttackSpeed;
     public int currentEnergy;
     protected float range;
     protected int hitsTaken = 0, hitsDealt = 0;
@@ -34,8 +36,8 @@ public class AllyPrimitive : MonoBehaviour
             maxHP = myInfoAlly.lifeList[currentLevel];
             currentHP = maxHP;
             currentDef = myInfoAlly.defensList[currentLevel];
-            currentAtack = myInfoAlly.atackList[currentLevel];
-            currentAtackSpeed = myInfoAlly.atackSpeed;
+            currentAttack = myInfoAlly.atackList[currentLevel];
+            currentAttackSpeed = myInfoAlly.atackSpeed;
 
             if (myInfoAlly.melee)
             {
@@ -66,5 +68,14 @@ public class AllyPrimitive : MonoBehaviour
             CancelInvoke();
             currentState = AllyPrimitive.StatesAlly.DEAD;
         }
+    }
+
+    public void ResetAll()
+    {
+        currentAttack = maxAttack;
+        currentDef = maxDef;
+        currentHP = maxHP;
+        currentAttackSpeed = maxAttackSpeed;
+        currentEnergy = 0;
     }
 }

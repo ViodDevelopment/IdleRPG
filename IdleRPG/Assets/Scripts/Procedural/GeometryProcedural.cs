@@ -109,6 +109,8 @@ public class GeometryProcedural : MonoBehaviour
                 matrixProcedural.matrixVertexProcedural[numX][numZ].posXMatrix = numX;
                 matrixProcedural.matrixVertexProcedural[numX][numZ].posZMatrix = numZ;
                 matrixProcedural.matrixVertexProcedural[numX][numZ].currentTypeVertex = VertexProcedural.typeOfVertex.NONE;
+                matrixProcedural.matrixVertexProcedural[numX][numZ].ocupated = false;
+                matrixProcedural.matrixVertexProcedural[numX][numZ].density = density;
                 z += 1f / precisionProcedural;
             }
             z = gameObject.transform.position.z;

@@ -12,10 +12,27 @@ public class VertexProcedural
     public int posZMatrix;
     public enum typeOfVertex {NONE ,PATH, ENVIRONMENT };
     public typeOfVertex currentTypeVertex = typeOfVertex.NONE;
-
+    public bool ocupated = false;
+    public VertexProcedural parentOcupated;
+    public List<int> myVertexsX = new List<int>();
+    public List<int> myVertexsZ = new List<int>();
+    public bool myGameObject = false;//por probar
+    public string nameGO = "";
+    public int density = 1;
 
     public void ResetPoint()
     {
         currentTypeVertex = typeOfVertex.NONE;
+        parentOcupated = null;
+        ocupated = false;
+        if(myGameObject)
+        {
+            myVertexsX.Clear();//recalular los vertices
+            myVertexsZ.Clear();
+
+            GameObject.DestroyImmediate(GameObject.Find(nameGO));
+            myGameObject = false;
+            nameGO = "";
+        }
     }
 }

@@ -108,7 +108,7 @@ public class BaseDeDatosAllies : MonoBehaviour
                     l_allie.id = l_id;
                     l_allie.currentLevel = 1;
                     l_allie.name = valor[0];
-                    /*switch(int.Parse(valor[1]))
+                    switch(int.Parse(valor[1]))
                     {
                         case 0:
                             l_allie.faction = InfoAllies.TypeOfFactions.IMPERIO;//si peta es pq el excel todavia no lo tiene en numeros estos datos
@@ -144,7 +144,11 @@ public class BaseDeDatosAllies : MonoBehaviour
                     if (valor[3] == "M")
                         l_allie.melee = true;
                     else l_allie.melee = false;
-                    //añadir mas cosas*/
+                    //añadir mas cosas
+                }
+                else if(l_row == 2)
+                {
+
                 }
                 else if (l_row >= 4 && l_row <= 203)
                 {
@@ -153,14 +157,30 @@ public class BaseDeDatosAllies : MonoBehaviour
                         l_allie.maxLevel = int.Parse(valor[0]);
                         l_allie.lifeList.Add(int.Parse(valor[1]));
                         l_allie.atackList.Add(int.Parse(valor[2]));
-                        //l_allie.defensList.Add(int.Parse(valor[3]));
-                        l_allie.atackSpeed = float.Parse(valor[3]);
+                        l_allie.defensList.Add(int.Parse(valor[3]));
+                        string _atckS = "";
+                        for (int i = 0; i < valor[4].Length; i++)
+                        {
+                            if(i > 0)
+                            {
+                                _atckS += valor[4][i];
+                            }
+                        }
+                        _atckS += ".";
+                        for (int i = 0; i < valor[5].Length; i++)
+                        {
+                            if (valor[5].Length - 1 > i)
+                            {
+                                _atckS += valor[5][i];
+                            }
+                        }
+                        l_allie.atackSpeed = float.Parse(_atckS);
                     }
                 }
 
 
 
-                if (l_row == 202)
+                if (l_row == 203)
                 {
                     l_row = 0;
                     l_id++;

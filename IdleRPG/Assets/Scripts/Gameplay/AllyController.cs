@@ -33,7 +33,7 @@ public class AllyController : AllyPrimitive
             return;
         }
         Debug.Log("Attacking :" + target);
-        targetScript.RecieveDmg(currentAtack);
+        targetScript.RecieveDmg(currentAttack);
 
         hitsDealt++;
     }
@@ -80,7 +80,7 @@ public class AllyController : AllyPrimitive
         else if (target && !isAttacking)
         {
             isAttacking = true;
-            InvokeRepeating("BasicAttack", 0, currentAtackSpeed);
+            InvokeRepeating("BasicAttack", 0, currentAttackSpeed);
         }
 
     }
