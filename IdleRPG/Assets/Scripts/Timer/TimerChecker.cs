@@ -6,6 +6,8 @@ using UnityEngine.UI;
 
 public class TimerChecker : MonoBehaviour
 {
+    public Button Entrada;
+    public Button Salida;
 
     public string fecha; 
     public TimeSpan hora;
@@ -17,6 +19,7 @@ public class TimerChecker : MonoBehaviour
     private int diaSalida;
     private int mesSalida;
 
+    private TimeSpan TiempoAfk;
     public TimeSpan CurrentTime;
     public string[] partesFecha;
     void Start ()
@@ -31,14 +34,14 @@ public class TimerChecker : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0)) //entra
         {
-            StartCoroutine(checkTime());
-            Check();
+            //StartCoroutine(checkTime());
+            //Check();
            // print("la longitud del array aumenta ? " + partesFecha.Length);
 
         }
         if (Input.GetMouseButtonDown(1))  //sale
         {
-            StartCoroutine(checkTime());
+           // StartCoroutine(checkTime());
            
         }
            
@@ -70,15 +73,80 @@ public class TimerChecker : MonoBehaviour
         if(fechaSalida== null)
         {
             Debug.Log("Es su primerito dia");
+
         }
         else
         {
-
+            ComprobarMes();
         }
 
     }
 
+    public void LogIn()
+    {
+        print("Entro");
+        updateTime();
+        updateDate();
+        Check();
+    }
 
+    public void LogOut()
+    {
+        print("Salgo");
+        StartCoroutine(checkTime());
+
+        fechaSalida = fecha;
+        mesSalida = mes;
+        diaSalida = dia;
+        horaSalida = hora; 
+
+
+        
+    }
+
+
+
+
+    void ComprobarMes()
+    {
+        if(mes==mesSalida)
+        {
+            ComprobarDia();
+        }
+        else if (mes != mesSalida)
+        {
+            if((dia==1  && (diaSalida == 31 || diaSalida==30 || diaSalida==29 || diaSalida == 28)) && mes==(1+mesSalida))
+            {
+
+                hora += new TimeSpan(24, 00, 00);
+                TiempoAfk = hora - horaSalida;
+                print("tiempo" + TiempoAfk);
+            }
+            else
+            {
+                //recompensas max
+            }
+        }
+    }
+
+
+    void ComprobarDia() {
+
+
+
+        if (dia != diaSalida)
+        {
+            hora += new TimeSpan(24, 00, 00);
+            TiempoAfk = hora - horaSalida;
+            print("tiempo" + TiempoAfk);
+
+        }
+        else if (dia == diaSalida)
+        {
+            TiempoAfk = horaSalida - hora;
+            print("tiempo" + TiempoAfk);
+        }
+    }
     /*  private IEnumerator CheckTime()
  {
      Debug.Log("==> Checking the time");
