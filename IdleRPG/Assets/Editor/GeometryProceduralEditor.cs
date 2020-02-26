@@ -29,6 +29,7 @@ public class GeometryProceduralEditor : Editor
     private int currentTabEditMode = 0;
     private int currentTabClean = 0;
 
+
     public override void OnInspectorGUI()//La función predeterminada del editor
     {
         GeometryProcedural l_geometryP = (GeometryProcedural)target;
@@ -112,7 +113,7 @@ public class GeometryProceduralEditor : Editor
 
                 if (GUILayout.Button("Save Procedural"))
                 {
-                     MatrixOfProcedural[] l_allMatrix = GameObject.FindObjectsOfType<MatrixOfProcedural>();//Puede ser poco optimo, revisar para mejorar
+                    MatrixOfProcedural[] l_allMatrix = GameObject.FindObjectsOfType<MatrixOfProcedural>();//Puede ser poco optimo, revisar para mejorar
                     foreach (var item in l_allMatrix)
                     {
                         item.SaveMatrix();
@@ -122,6 +123,7 @@ public class GeometryProceduralEditor : Editor
                     currentTabEditMode = 0;
                 }
                 break;
+
         }
 
 
@@ -133,14 +135,54 @@ public class GeometryProceduralEditor : Editor
     void OnSceneGUI()
     {
         Event e = Event.current;
-
-        if (e.type == EventType.Layout)
-            HandleUtility.AddDefaultControl(GUIUtility.GetControlID(GetHashCode(), FocusType.Passive));
-
+        if (e.button != 2 || e.button != 1)
+        {
+            if (e.rawType == EventType.Layout)
+                HandleUtility.AddDefaultControl(GUIUtility.GetControlID(GetHashCode(), FocusType.Passive));
+        }
         if (lockedCamera && EditorApplication.isPlayingOrWillChangePlaymode)
             EditorApplication.ExitPlaymode();
 
-        if ((e.type == EventType.MouseDrag || e.type == EventType.MouseDown) && lockedCamera)
+
+        if (currentTab == 1)
+        {
+            GeometryProcedural myGeome = (GeometryProcedural)target;
+            GameObject myGo = myGeome.gameObject;
+
+            Ray ray = HandleUtility.GUIPointToWorldRay(e.mousePosition);
+            float l_numRepp = (ray.origin.y - myGo.transform.position.y) / Mathf.Abs(ray.direction.y);
+            Vector3 l_puntoImpactoo = ray.origin + l_numRepp * ray.direction - myGo.transform.position;
+            Color color;
+   
+
+            if (currentTabEditMode == 1 || currentTabEditMode == 2 || currentTabClean == 3 || currentTabClean == 4 || currentTabClean == 1)
+            {
+                if (currentTabEditMode == 1 || currentTabEditMode == 2)
+                    color = Color.green;
+                else
+                    color = Color.red;
+
+                color.a = 0.25f;
+                Handles.color = color;
+                Handles.DrawSolidDisc(l_puntoImpactoo, Vector3.up, radiusEnvironment + radiusPath);
+            }
+            if (currentTabEditMode == 1 || currentTabClean == 2)
+            {
+                if (currentTabEditMode == 1)
+                    color = Color.blue;
+                else
+                    color = Color.red;
+
+                color.a = 0.25f;
+                Handles.color = color;
+                Handles.DrawSolidDisc(l_puntoImpactoo, Vector3.up, radiusPath);
+            }
+
+
+        }
+
+
+        if ((e.rawType == EventType.MouseDrag || e.rawType == EventType.MouseDown) && lockedCamera && e.button == 0)
         {
 
             GameObject _go = HandleUtility.PickGameObject(e.mousePosition, true);
@@ -171,16 +213,49 @@ public class GeometryProceduralEditor : Editor
                     else
                         l_geometryP.GetComponent<MatrixOfProcedural>().CleanAll();
                 }
+                else
+                {
+
+                    if (_go.GetComponentInParent<GeometryProcedural>() != null)
+                    {
+                        _go = _go.transform.parent.gameObject;
+                        if (_go.GetComponent<GeometryProcedural>() != null)
+                        {
+                            GeometryProcedural l_geometryP = _go.GetComponent<GeometryProcedural>();
+                            if (!cleanAll)
+                            {
+                                Ray l_rayWorld = HandleUtility.GUIPointToWorldRay(e.mousePosition);
+                                float l_numRep = (l_rayWorld.origin.y - _go.transform.position.y) / Mathf.Abs(l_rayWorld.direction.y);
+                                Vector3 l_puntoImpacto = l_rayWorld.origin + l_numRep * l_rayWorld.direction - _go.transform.position;
+                                if (activo)
+                                    l_geometryP.GetComponent<MatrixOfProcedural>().PrintPath(l_puntoImpacto, radiusPath, radiusEnvironment);
+                                else if (borrar)
+                                    l_geometryP.GetComponent<MatrixOfProcedural>().RubishMode(l_puntoImpacto, radiusPath + radiusEnvironment);
+                                else if (environment)
+                                    l_geometryP.GetComponent<MatrixOfProcedural>().EnvironmentMode(l_puntoImpacto, radiusPath + radiusEnvironment);
+                                else if (cleanPath)
+                                    l_geometryP.GetComponent<MatrixOfProcedural>().CleanPath(l_puntoImpacto, radiusPath);
+                                else if (cleanEnvironment)
+                                    l_geometryP.GetComponent<MatrixOfProcedural>().CleanEnvironment(l_puntoImpacto, radiusPath + radiusEnvironment);//
+
+
+
+                            }
+                            else
+                                l_geometryP.GetComponent<MatrixOfProcedural>().CleanAll();
+                        }
+
+                    }
+                }
 
 
             }
-
 
             Event.current.Use();
         }
 
 
-        if (e.type == EventType.Layout)
+        if (e.rawType == EventType.Layout)
         {
             int id = GUIUtility.GetControlID(FocusType.Passive);
             HandleUtility.AddDefaultControl(id);

@@ -13,7 +13,7 @@ public class MatrixOfProcedural : MonoBehaviour
     private static string nameMesh;
     private int[] sizeMesh = new int[2];
     public int precisionOfMatrix = 0;
-    public Mesh mesh;
+    public List<GameObject> meshes = new List<GameObject>();
 
     private void Awake()
     {
@@ -30,6 +30,8 @@ public class MatrixOfProcedural : MonoBehaviour
 
     private void Update()//quitar cuando esté hecho
     {
+
+
         if (precisionOfMatrix <= 0 || matrixVertexProcedural.Count <= 0)
         {
             nameMesh = gameObject.GetComponent<GeometryProcedural>().myMesh.name;
@@ -523,17 +525,20 @@ public class MatrixOfProcedural : MonoBehaviour
     {
         if (!matrixVertexProcedural[_x][_z].ocupated && matrixVertexProcedural[_x][_z].currentTypeVertex == VertexProcedural.typeOfVertex.ENVIRONMENT)
         {
-            GameObject _go = new GameObject();
-            _go.AddComponent<MeshFilter>().mesh = mesh;
-            _go.AddComponent<MeshRenderer>();
-            _go.name = matrixVertexProcedural[_x][_z].positionsInFloats[0] + " " + matrixVertexProcedural[_x][_z].positionsInFloats[1] + " " + matrixVertexProcedural[_x][_z].positionsInFloats[2];
-            matrixVertexProcedural[_x][_z].nameGO = _go.name;
-            _go.transform.position = new Vector3(matrixVertexProcedural[_x][_z].positionsInFloats[0], matrixVertexProcedural[_x][_z].positionsInFloats[1], matrixVertexProcedural[_x][_z].positionsInFloats[2]);
+            Random.InitState(Random.seed + Random.Range(-2, 2));
+            int l_randomNum = Random.Range(0, meshes.Count);
+            GameObject l_go = Instantiate(meshes[l_randomNum], meshes[l_randomNum].transform.position, meshes[l_randomNum].transform.rotation);
+            l_go.name = matrixVertexProcedural[_x][_z].positionsInFloats[0] + " " + matrixVertexProcedural[_x][_z].positionsInFloats[1] + " " + matrixVertexProcedural[_x][_z].positionsInFloats[2];
+            matrixVertexProcedural[_x][_z].nameGO = l_go.name;
+            l_go.transform.position = new Vector3(matrixVertexProcedural[_x][_z].positionsInFloats[0], matrixVertexProcedural[_x][_z].positionsInFloats[1], matrixVertexProcedural[_x][_z].positionsInFloats[2]);
+            l_go.transform.SetParent(transform);
             matrixVertexProcedural[_x][_z].ocupated = true;
             matrixVertexProcedural[_x][_z].myGameObject = true;
-            _go.transform.rotation = Quaternion.LookRotation(new Vector3(Random.Range(-5,5), 0, Random.Range(-5,5)),Vector3.up);
+            Random.InitState(Random.seed + Random.Range(-2,2));
+            l_go.transform.rotation = Quaternion.LookRotation(new Vector3(Random.Range(-10,10), 0, Random.Range(-10,10)),Vector3.up);
+            BoxCollider boxCollider = l_go.GetComponent<BoxCollider>();
             //dependiendo de lo grande y la densidad cambiar el 4
-            float l_radius = mesh.bounds.max.magnitude * matrixVertexProcedural[_x][_z].density + 3.5f;
+            float l_radius = boxCollider.bounds.max.magnitude * matrixVertexProcedural[_x][_z].density / 2;
             float l_incrementAngles = 5f / (l_radius);
             float currentAngles = 0;
             List<Vector2Int> l_positions = new List<Vector2Int>();

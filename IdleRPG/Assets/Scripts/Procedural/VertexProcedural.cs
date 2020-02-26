@@ -27,8 +27,11 @@ public class VertexProcedural
         ocupated = false;
         if(myGameObject)
         {
-            myVertexsX.Clear();//recalular los vertices
-            myVertexsZ.Clear();
+            if (myVertexsX.Count > 0)
+            {
+                myVertexsX.Clear();//recalular los vertices
+                myVertexsZ.Clear();
+            }
 
             GameObject.DestroyImmediate(GameObject.Find(nameGO));
             myGameObject = false;
