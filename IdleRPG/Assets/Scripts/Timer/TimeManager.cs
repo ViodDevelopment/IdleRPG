@@ -43,8 +43,8 @@ public class TimeManager : MonoBehaviour
         yield return www;
         todaysDates = www.text;
         string[] words = todaysDates.Split('/');
-        Debug.Log("The date is : " + words[0]);
-        Debug.Log("The time is : " + words[1]);
+       // Debug.Log("The date is : " + words[0]);
+      //  Debug.Log("The time is : " + words[1]);
 
         _currentDate = words[0];
         _currentTime = words[1];

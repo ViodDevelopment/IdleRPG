@@ -16,23 +16,28 @@ public class TimerChecker : MonoBehaviour
 
     private string fechaSalida;
     private TimeSpan horaSalida;
+    private string horaSalidaString;
     private int diaSalida;
     private int mesSalida;
 
     private TimeSpan TiempoAfk;
     public TimeSpan CurrentTime;
     public string[] partesFecha;
+
+
     void Start ()
     {
+        
         //CurrentTime = TimeSpan.Parse(TimeManager.sharedInstance.getCurrentTimeNow());
        
 
         StartCoroutine(checkTime());
     }
-    void Update()
+    void LateUpdate()
     {
-
-        if (Input.GetMouseButtonDown(0)) //entra
+       
+        
+      /*  if (Input.GetMouseButtonDown(0)) //entra
         {
             //StartCoroutine(checkTime());
             //Check();
@@ -44,7 +49,7 @@ public class TimerChecker : MonoBehaviour
            // StartCoroutine(checkTime());
            
         }
-           
+           */
      
     }
 
@@ -70,13 +75,18 @@ public class TimerChecker : MonoBehaviour
 
     void Check()
     {
-        if(fechaSalida== null)
+        if(fechaSalida== "")
         {
             Debug.Log("Es su primerito dia");
 
         }
         else
         {
+            mesSalida = PlayerPrefs.GetInt("mesSalida", mesSalida);
+            diaSalida = PlayerPrefs.GetInt("diaSalida", diaSalida);
+            horaSalidaString = PlayerPrefs.GetString("horaSalidaString", horaSalidaString);
+            horaSalida = TimeSpan.Parse(horaSalidaString);
+
             ComprobarMes();
         }
 
@@ -85,22 +95,27 @@ public class TimerChecker : MonoBehaviour
     public void LogIn()
     {
         print("Entro");
-        updateTime();
-        updateDate();
+        fechaSalida = PlayerPrefs.GetString("fechaSalida", fechaSalida);
+        print(fechaSalida);
+        StartCoroutine(checkTime());
         Check();
+
     }
 
     public void LogOut()
     {
-        print("Salgo");
+       // print("Salgo");
         StartCoroutine(checkTime());
 
         fechaSalida = fecha;
         mesSalida = mes;
         diaSalida = dia;
-        horaSalida = hora; 
-
-
+        horaSalida = hora;
+        horaSalidaString = horaSalida.ToString();
+        PlayerPrefs.SetString("fechaSalida", fechaSalida);
+        PlayerPrefs.SetString("horaSalidaString", horaSalidaString);
+        PlayerPrefs.SetInt("diaSalida",diaSalida );
+        PlayerPrefs.SetInt("mesSalida",mesSalida );
         
     }
 
@@ -143,7 +158,8 @@ public class TimerChecker : MonoBehaviour
         }
         else if (dia == diaSalida)
         {
-            TiempoAfk = horaSalida - hora;
+            print("Hola buenos dias");
+            TiempoAfk = hora - horaSalida;
             print("tiempo" + TiempoAfk);
         }
     }
