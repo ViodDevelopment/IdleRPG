@@ -17,7 +17,7 @@ public class TimerChecker : MonoBehaviour
     private string fechaSalida;
     private TimeSpan horaSalida;
     private string horaSalidaString;
-    private int diaSalida;
+    public int diaSalida;
     private int mesSalida;
 
     private TimeSpan TiempoAfk;
@@ -53,7 +53,7 @@ public class TimerChecker : MonoBehaviour
      
     }
 
-    private IEnumerator checkTime()
+    public IEnumerator checkTime()
     {
         yield return StartCoroutine(TimeManager.sharedInstance.getTime());
         updateTime();
