@@ -53,6 +53,19 @@ public class AllyController : AllyPrimitive
         
     }
 
+    public void AutomatedAbilities()
+    {
+        for (int i = 0; i < specialAbilities.Length; i++)
+        {
+            if (i == selectedAbility) break;
+
+            if (specialAbilities[i].currentCooldown <= 0)
+            {
+
+            }
+        }
+    }
+
     #endregion
 
     public virtual void Initialize()
