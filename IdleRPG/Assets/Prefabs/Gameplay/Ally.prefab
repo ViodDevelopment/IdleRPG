@@ -104,14 +104,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 365d335eca1275648a604afc9708f249, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 200
-  energy: 0
-  basicAttackDmg: 10
-  hitsTaken: 0
-  hitsDealt: 0
-  range: 50
+  currentState: 0
+  currentHP: 200
+  maxHP: 200
+  currentAtack: 20
+  currentDef: 10
+  currentLevel: 1
+  expNextLvl: 0
+  currentAtackSpeed: 1
+  currentEnergy: 0
   enemiesInRange: []
   target: {fileID: 0}
   targetScript: {fileID: 0}
-  basicAttackCooldown: 2
   isAttacking: 0
+  specialAbilities: []
+  selectedAbility: 0
+  numOfAb: 0

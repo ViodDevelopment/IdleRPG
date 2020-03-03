@@ -42,7 +42,7 @@ public class RugidoDragon: SpecialAbility
     public float maxAngle;
     public float maxDistance;
 
-    public RugidoDragon(string _name, float _cooldown, int _dmg, int _energy, List<EnemyController> _listOfEnemies, float _maxAngle, float _maxDistance) : base(_name, _cooldown, _dmg, _energy)
+    public RugidoDragon(string _name, int _dmg, int _energy, float _attackSpeed , List<EnemyController> _listOfEnemies, float _maxAngle, float _maxDistance) : base(_name, _dmg, _energy, _attackSpeed)
     {
         listOfEnemies = _listOfEnemies;
         maxAngle = _maxAngle;
@@ -80,7 +80,7 @@ public class GolpeNaginata : SpecialAbility
 {
     public List<EnemyController> listOfEnemies;
     RyuugaoAbilities ally;
-    public GolpeNaginata(string _name, float _cooldown, int _dmg, int _energy, List<EnemyController> _listOfEnemies, RyuugaoAbilities _ally) : base(_name, _cooldown, _dmg, _energy)
+    public GolpeNaginata(string _name, float _cooldown, int _dmg, int _energy, float _attackSpeed, List<EnemyController> _listOfEnemies, RyuugaoAbilities _ally) : base(_name, _dmg, _energy, _attackSpeed)
     {
         listOfEnemies = _listOfEnemies;
         ally = _ally;
@@ -126,7 +126,7 @@ public class Temple : SpecialAbility
 {
     public List<AllyController> listOfAllies;
     RyuugaoAbilities ally;
-    public Temple(string _name, float _cooldown, int _dmg, int _energy, List<AllyController> _listOfAllies, RyuugaoAbilities _ally) : base(_name, _cooldown, _dmg, _energy)
+    public Temple(string _name, float _cooldown, int _dmg, int _energy, float _attackSpeed, List<AllyController> _listOfAllies, RyuugaoAbilities _ally) : base(_name, _dmg, _energy, _attackSpeed)
     {
         listOfAllies = _listOfAllies;
         ally = _ally;
@@ -158,7 +158,7 @@ public class EscamasDragon : SpecialAbility
 {
   
     RyuugaoAbilities ally;
-    public EscamasDragon(string _name, float _cooldown, int _dmg, int _energy,  RyuugaoAbilities _ally) : base(_name, _cooldown, _dmg, _energy)
+    public EscamasDragon(string _name, int _dmg, int _energy, float _attackSpeed, RyuugaoAbilities _ally) : base(_name, _dmg, _energy, _attackSpeed)
     {
         ally = _ally;
     }

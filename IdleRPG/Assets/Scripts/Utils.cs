@@ -30,7 +30,7 @@ public static class Utils
 
         foreach (GameObject go in list)
         {
-            if (go == null) break;
+            if (go == null || go.activeSelf == false) break;
             distance = Vector3.Distance(go.transform.position, thisGo.transform.position);
             if (distance < closestDistance)
             {
@@ -42,5 +42,26 @@ public static class Utils
         return target;
     }
 
-   
+    public static GameObject GetClosestAllyInList(GameObject thisGo, List<GameObject> list)
+    {
+        float closestDistance = Mathf.Infinity, distance;
+
+        GameObject target = null;
+
+        foreach (GameObject go in list)
+        {
+            AllyController aC = go.GetComponent<AllyController>();
+            if (go == null || go.activeSelf == false || aC.currentState == AllyPrimitive.StatesAlly.DEAD) break;
+            distance = Vector3.Distance(go.transform.position, thisGo.transform.position);
+            if (distance < closestDistance)
+            {
+                closestDistance = distance;
+                target = go;
+            }
+        }
+
+        return target;
+    }
+
+
 }

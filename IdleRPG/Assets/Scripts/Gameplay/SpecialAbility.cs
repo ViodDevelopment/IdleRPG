@@ -5,21 +5,31 @@ using UnityEngine;
 public class SpecialAbility : MonoBehaviour
 {
     public string name;
-    public float cooldown;
+    public float cooldownBase, currentCooldown;
     public int dmg;
     public int energyRequired;
     
 
-    public SpecialAbility(string _name , float _cooldown, int _dmg, int _energy)
+    public SpecialAbility(string _name , int _dmg, int _energy, float _attackSpeed)
     {
         name = _name;
-        cooldown = _cooldown;
+        cooldownBase = _energy * _attackSpeed * 2;
         dmg = _dmg;
         energyRequired = _energy;
     }
     public virtual void UseAb()
     {
         Debug.Log("Hab used");
+    }
+    private void Start()
+    {
+        currentCooldown = cooldownBase;
+    }
+
+
+    private void FixedUpdate()
+    {
+        currentCooldown -= Time.deltaTime;
     }
 
 }

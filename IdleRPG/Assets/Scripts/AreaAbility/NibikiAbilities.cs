@@ -29,7 +29,7 @@ public class AlteracionTemporal : SpecialAbility
     public List<EnemyController> listOfEnemies;
     public float  reduc; // tanto por ciento de reduccion 
 
-    public AlteracionTemporal(string _name, float _cooldown, int _dmg, int _energy, List<EnemyController> _listOfEnemies, float _reduc) : base(_name, _cooldown, _dmg, _energy)
+    public AlteracionTemporal(string _name, int _dmg, int _energy, float _attackSpeed, List<EnemyController> _listOfEnemies, float _reduc) : base(_name, _dmg, _energy, _attackSpeed)
     {
         listOfEnemies = _listOfEnemies;
         reduc = _reduc;
@@ -50,7 +50,7 @@ public class UltimoAliento : SpecialAbility
 {
     public List<AllyController> listOfAllies;
     public float timer; 
-    public UltimoAliento(string _name, float _cooldown, int _dmg, int _energy,  List<AllyController> _listOfAllies, float _timer ) : base(_name, _cooldown, _dmg, _energy)
+    public UltimoAliento(string _name, int _dmg, int _energy, float _attackSpeed,  List<AllyController> _listOfAllies, float _timer ) : base(_name, _dmg, _energy, _attackSpeed)
     {
         listOfAllies = _listOfAllies;
         timer = _timer;
@@ -83,7 +83,7 @@ public class RecuperarAlma : SpecialAbility
     public List<AllyController> listOfAllies;
     public int vidaCurar;
 
-    public RecuperarAlma(string _name, float _cooldown, int _dmg, int _energy, List<AllyController> _listOfAllies, int _vidaCurar) : base(_name, _cooldown, _dmg, _energy)
+    public RecuperarAlma(string _name, int _dmg, int _energy, float _attackSpeed, List<AllyController> _listOfAllies, int _vidaCurar) : base(_name, _dmg, _energy, _attackSpeed)
     {
         listOfAllies = _listOfAllies;
         vidaCurar = _vidaCurar;
@@ -116,7 +116,7 @@ public class CosechaAlmas : SpecialAbility
     public float timer;
     public GameObject NoMuerto;
     
-    public CosechaAlmas(string _name, float _cooldown, int _dmg, int _energy, int _timer, GameObject _NoMuerto) : base(_name, _cooldown, _dmg, _energy)
+    public CosechaAlmas(string _name,  int _dmg, int _energy, float _attackSpeed, int _timer, GameObject _NoMuerto) : base(_name,  _dmg, _energy, _attackSpeed)
     {
         timer = _timer;
         NoMuerto = _NoMuerto;

@@ -42,12 +42,12 @@ public class EnemyController : MonoBehaviour
         {
             allies = Utils.CheckGOInRangeByTag(gameObject, "Ally", range);
         }
-        else if(target == null)
+        else if(target == null || targetScript.currentState == AllyPrimitive.StatesAlly.DEAD)
         {
             CancelInvoke();
             isAttacking = false;
             allies = Utils.CheckGOInRangeByTag(gameObject, "Ally", range);
-            target = Utils.GetClosestGOInList(gameObject, allies);
+            target = Utils.GetClosestAllyInList(gameObject, allies);
 
             try { targetScript = target.GetComponent<AllyController>(); } catch { Debug.Log("Couldn't get ally controller from = " + target); }
         }
@@ -60,7 +60,7 @@ public class EnemyController : MonoBehaviour
 
     public void BasicAttack()
     {
-        if(target == null)
+        if(target == null || targetScript.currentState == AllyPrimitive.StatesAlly.DEAD)
         {
             CancelInvoke();
             return;
