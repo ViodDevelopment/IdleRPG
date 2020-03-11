@@ -135,7 +135,7 @@ public class GeometryProceduralEditor : Editor
     void OnSceneGUI()
     {
         Event e = Event.current;
-        if (e.button != 2 || e.button != 1)
+        if (e.button != 2 || e.button != 1 && (currentTab == 0 || currentTabClean == 0))
         {
             if (e.rawType == EventType.Layout)
                 HandleUtility.AddDefaultControl(GUIUtility.GetControlID(GetHashCode(), FocusType.Passive));
